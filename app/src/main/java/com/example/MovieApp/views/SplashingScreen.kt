@@ -1,4 +1,4 @@
-package com.example.MovieApp
+package com.example.MovieApp.views
 
 import androidx.compose.ui.graphics.Color
 import android.os.Bundle
@@ -38,6 +38,9 @@ import com.example.MovieApp.ui.theme.SplashScreenTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.res.painterResource
+import com.example.MovieApp.R
+import kotlinx.coroutines.delay
 
 class SplashingScreen : ComponentActivity() {
     // creating view model instance by factory design pattern
@@ -77,7 +80,7 @@ fun SplashingScreen(
     ){
         // Background image
         Image(
-            painter = androidx.compose.ui.res.painterResource(id = R.drawable.onboardingscreen2),
+            painter = painterResource(id = R.drawable.onboardingscreen2),
             contentDescription = "splash screen image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
@@ -88,7 +91,7 @@ fun SplashingScreen(
         // When uiState is Success, launch a coroutine to delay showing the button
         LaunchedEffect(uiState) {
             if (uiState is UiState.Success) {
-                kotlinx.coroutines.delay(2000) // delay 1 second
+                delay(2000) // delay 1 second
                 showButton = true
             }
         }
