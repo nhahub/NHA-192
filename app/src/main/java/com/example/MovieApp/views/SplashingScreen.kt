@@ -8,6 +8,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -29,8 +30,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.MovieApp.MoviesViewModel.MoviesViewModel
-import com.example.MovieApp.MoviesViewModel.MoviesViewModelFactory
+import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
+import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModelFactory
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.network.RemoteDataSourceImpl
 import com.example.MovieApp.repo.MoviesRepositoryImpl
@@ -38,8 +39,16 @@ import com.example.MovieApp.ui.theme.SplashScreenTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.R
+import com.example.MovieApp.auth.EmailPasswordAuthManagerRepository
+import com.example.MovieApp.viewModels.AuthViewModel
+import com.example.MovieApp.viewModels.AuthViewModelFactory
 import kotlinx.coroutines.delay
 
 class SplashingScreen : ComponentActivity() {
@@ -51,22 +60,56 @@ class SplashingScreen : ComponentActivity() {
             )
         )
     }
-    // my api key ->  8375062ce126aac7379b665b2af3d0ed
+
+    val authViewModel : AuthViewModel by viewModels {
+        AuthViewModelFactory(
+            repo = EmailPasswordAuthManagerRepository()
+        )
+    }
+    // Ahmed : api key ->  8375062ce126aac7379b665b2af3d0ed
+    // use your own api key as there are limitations around the number of requests by Tmdb
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
             SplashScreenTheme {
-                // A surface container using the 'background' color from the theme
-                SplashingScreen(viewModel )
+                NavHost(
+                    navController = navController,
+                    startDestination = "splash_screen"
+                ) {
+                    composable("splash_screen") {
+                        SplashingScreen(viewModel = viewModel , navController = navController)
+                    }
+                    composable("auth_screen") {
+                        AuthScreen(navController = navController)
+                    }
+                    composable("sign_up_screen") {
+                        SignUpScreen(
+                            authViewModel = authViewModel,
+                            navController = navController
+                        )
+                    }
+                    composable("sign_in_screen") {
+                        SignInScreen(
+                            authViewModel = authViewModel,
+                            navController = navController
+                        )
+                    }
+                    composable("main_screen"){
+                        mainScreen()
+                    }
+                }
             }
         }
     }
 }
 
+// Splashing Screen Composable function
 @Composable
 fun SplashingScreen(
-    viewModel: MoviesViewModel
+    viewModel: MoviesViewModel,
+    navController: NavController
 ) {
     // first i instantiate the ui state by collecting the state flow from view model
     val uiState by viewModel.popularMovies.collectAsStateWithLifecycle()
@@ -95,6 +138,12 @@ fun SplashingScreen(
                 showButton = true
             }
         }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color(0x80000000)) // أسود شفاف (50%)
+        )
 
         // Content overlay
         Column(
@@ -131,7 +180,11 @@ fun SplashingScreen(
                 }
                 uiState is UiState.Success && showButton -> {
                     Button(
-                        onClick = { /* Navigate */ },
+                        onClick = {
+                            navController.navigate("auth_screen") {
+                                popUpTo("splash_screen") { inclusive = true }
+                            }
+                        },
                         shape = RoundedCornerShape(28.dp), // Large rounded corners for the pill shape
                         colors = ButtonDefaults.buttonColors(
                             containerColor = Color(0xFF334455), // The dark, moody background
@@ -158,11 +211,9 @@ fun SplashingScreen(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun SplashScreenPreview() {
-    SplashingScreen(
-        viewModel = MoviesViewModel(
-            repo = MoviesRepositoryImpl(
-                remoteDataSource = RemoteDataSourceImpl()
-            )
-        )
-    )
+    val fakeViewModel = MoviesViewModelFactory(
+        repo = MoviesRepositoryImpl(RemoteDataSourceImpl())
+    ).create(MoviesViewModel::class.java)
+
+    SplashingScreen(viewModel = fakeViewModel , navController = NavController(LocalContext.current))
 }

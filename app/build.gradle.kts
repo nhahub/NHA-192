@@ -51,10 +51,12 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
     implementation(libs.androidx.runtime)
+    // for firebase authentication
     implementation(libs.firebase.auth)
     implementation(libs.androidx.credentials)
     implementation(libs.androidx.credentials.play.services.auth)
     implementation(libs.googleid)
+    // for cloud firestore
     implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -69,4 +71,7 @@ dependencies {
     implementation(libs.converter)
     implementation(libs.gson)
     implementation(libs.lifecycle.viewmodel.ktx)
+
+    // for navigation compose
+    implementation(libs.navigation.compose)
 }

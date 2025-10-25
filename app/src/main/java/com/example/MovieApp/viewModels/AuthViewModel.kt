@@ -1,13 +1,13 @@
 package com.example.MovieApp.viewModels
 
 import android.util.Log
-import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.MovieApp.auth.AuthResult
 import com.example.MovieApp.auth.EmailPasswordAuthManagerRepository
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class AuthViewModel(
@@ -17,12 +17,16 @@ class AuthViewModel(
     val tag = "AuthViewModel"
 
     // Internal mutable state
-    private val _signupState = mutableStateOf<AuthResult<String>>(AuthResult.Loading)
+    private val _signupState = MutableStateFlow<AuthResult<String>>(AuthResult.Loading)
     // Exposed as read-only to UI
-    val signupState: State<AuthResult<String>> get() = _signupState
+    val signupState = _signupState.asStateFlow()
+
+    private val _signInState = MutableStateFlow<AuthResult<String>>(AuthResult.Loading)
+    // Exposed as read-only to UI
+    val signInState = _signInState.asStateFlow()
 
     // Function to handle user sign-up
-    fun signUp(email: String, password: String, name: String, phoneNumber: String) {
+    fun SignUp(email: String, password: String, name: String, phoneNumber: String) {
         Log.d(tag, "Starting sign-up process for email: $email")
         _signupState.value = AuthResult.Loading
         viewModelScope.launch {
@@ -40,15 +44,15 @@ class AuthViewModel(
     // Function to check if user is Sign in
     fun SignIn(email : String , password : String) {
         Log.d(tag, "Starting sign-in process for email: $email")
-        _signupState.value = AuthResult.Loading
+        _signInState.value = AuthResult.Loading
         viewModelScope.launch {
             try {
                 Log.d(tag, "Coroutine launched for sign-in")
                 val result = repo.signIn(email, password)
-                _signupState.value = result
+                _signInState.value = result
             } catch (e: Exception) {
                 Log.e(tag, "Error during sign-in: ${e.message}")
-                _signupState.value = AuthResult.Error(e.message ?: "Unknown error occurred")
+                _signInState.value = AuthResult.Error(e.message ?: "Unknown error occurred")
             }
         }
     }
