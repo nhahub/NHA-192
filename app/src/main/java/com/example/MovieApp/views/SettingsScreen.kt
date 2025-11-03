@@ -35,6 +35,8 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -65,6 +67,16 @@ fun SettingsScreen(
 ) {
     val darkMode by settingsViewModel.darkMode.collectAsState()
     val coroutineScope = rememberCoroutineScope()
+    val openAlertDialog = remember { mutableStateOf(false) }
+
+    if (openAlertDialog.value) {
+        ChangePasswordDialog(
+            onDismissRequest = { openAlertDialog.value = false },
+            passwordChange = { oldPassword, newPassword ->
+                openAlertDialog.value = false
+            }
+        )
+    }
 
     Box {
         Box(
@@ -130,7 +142,7 @@ fun SettingsScreen(
                     description = "Update your account password",
                     icon = Icons.Outlined.Lock,
                     buttonText = "Change Password",
-                    onButtonClick = { navController.navigate("change_password" )}
+                    onButtonClick = { openAlertDialog.value = true }
                 )
                 Spacer(modifier = Modifier.height(28.dp))
                 SwitchSettingsCard(
