@@ -74,4 +74,7 @@ dependencies {
 
     // for navigation compose
     implementation(libs.navigation.compose)
+
+    // datastore for settings
+    implementation(libs.datastore.preferences)
 }
