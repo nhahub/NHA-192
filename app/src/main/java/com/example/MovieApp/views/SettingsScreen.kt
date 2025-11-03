@@ -33,17 +33,18 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.MovieApp.R
@@ -53,10 +54,18 @@ import com.example.MovieApp.ui.theme.Grapefruit
 import com.example.MovieApp.ui.theme.OldBrick
 import com.example.MovieApp.ui.theme.Saffron
 import com.example.MovieApp.ui.theme.Typography
+import com.example.MovieApp.viewModels.SettingsViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SettingsScreen(navController: NavController) {
+fun SettingsScreen(
+    navController: NavController,
+    settingsViewModel: SettingsViewModel
+) {
+    val darkMode by settingsViewModel.darkMode.collectAsState()
+    val coroutineScope = rememberCoroutineScope()
+
     Box {
         Box(
             modifier = Modifier
@@ -128,8 +137,10 @@ fun SettingsScreen(navController: NavController) {
                     title = "Dark Mode",
                     description = "Toggle dark theme\nappearance",
                     icon = R.drawable.dark,
-                    onCheckedChange = {},
-                    checked = true
+                    onCheckedChange = { enabled ->
+                        coroutineScope.launch { settingsViewModel.setDarkMode(enabled = enabled) }
+                    },
+                    checked = darkMode
                 )
                 Spacer(modifier = Modifier.height(28.dp))
                 ButtonSettingsCard(
@@ -405,8 +416,8 @@ fun AboutCard() {
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun SettingsPreview() {
-    SettingsScreen(navController = NavController(LocalContext.current))
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun SettingsPreview() {
+//    SettingsScreen(navController = NavController(LocalContext.current))
+//}

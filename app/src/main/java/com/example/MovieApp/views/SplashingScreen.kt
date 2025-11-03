@@ -47,8 +47,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.R
 import com.example.MovieApp.auth.EmailPasswordAuthManagerRepository
+import com.example.MovieApp.datastore.DataStoreManager
+import com.example.MovieApp.repo.SettingsRepositoryImpl
 import com.example.MovieApp.viewModels.AuthViewModel
 import com.example.MovieApp.viewModels.AuthViewModelFactory
+import com.example.MovieApp.viewModels.SettingsViewModel
+import com.example.MovieApp.viewModels.SettingsViewModelFactory
 import kotlinx.coroutines.delay
 
 class SplashingScreen : ComponentActivity() {
@@ -66,6 +70,15 @@ class SplashingScreen : ComponentActivity() {
             repo = EmailPasswordAuthManagerRepository()
         )
     }
+
+    private val settingsViewModel: SettingsViewModel by viewModels {
+        SettingsViewModelFactory(
+            repository = SettingsRepositoryImpl(
+                dataStoreManager = DataStoreManager(this)
+            )
+        )
+    }
+
     // Ahmed : api key ->  8375062ce126aac7379b665b2af3d0ed
     // use your own api key as there are limitations around the number of requests by Tmdb
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,7 +115,10 @@ class SplashingScreen : ComponentActivity() {
                         )
                     }
                     composable("settings") {
-                        SettingsScreen(navController = navController)
+                        SettingsScreen(
+                            navController = navController,
+                            settingsViewModel = settingsViewModel
+                        )
                     }
                 }
             }
