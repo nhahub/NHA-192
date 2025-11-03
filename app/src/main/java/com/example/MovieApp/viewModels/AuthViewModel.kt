@@ -72,4 +72,21 @@ class AuthViewModel(
         Log.d(tag, "Getting current user")
         return repo.getCurrentUser()
     }
+
+    fun changePassword(oldPassword:String, newPassword: String) {
+        _signInState.value = AuthResult.Loading
+        viewModelScope.launch {
+            try {
+                val result =
+                    getCurrentUser()?.email?.let { repo.changePassword(it, oldPassword, newPassword) }
+                if (result != null) {
+                    _signInState.value = result
+                }
+            } catch (e: Exception) {
+                Log.e(tag, "Error during changing password: ${e.message}")
+                _signInState.value = AuthResult.Error(e.message ?: "Unknown error occurred")
+            }
+        }
+    }
+
 }

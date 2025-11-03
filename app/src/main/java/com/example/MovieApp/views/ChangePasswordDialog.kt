@@ -17,30 +17,38 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.MovieApp.auth.AuthResult
 import com.example.MovieApp.ui.theme.Saffron
 import com.example.MovieApp.ui.theme.Typography
+import com.example.MovieApp.viewModels.AuthViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChangePasswordDialog (
-    onDismissRequest: () -> Unit,
-    passwordChange: (oldPassword: String, newPassword: String) -> Unit
+        onDismissRequest: () -> Unit,
+        authViewModel: AuthViewModel
     ) {
     val oldPassword = remember { mutableStateOf("") }
     val newPassword = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
+
+    val signInstate by authViewModel.signInState.collectAsStateWithLifecycle()
+    var pressed by remember { mutableStateOf(false) }
+    var passwordMismatchError by remember { mutableStateOf(false) }
 
     Dialog (
         onDismissRequest = { onDismissRequest() },
@@ -119,34 +127,26 @@ fun ChangePasswordDialog (
                     onValueChange = { confirmPassword.value = it },
                     labelText = "Confirm new password"
                 )
-//                OutlinedTextField(
-//                    value = confirmPassword.value,
-//                    onValueChange = { confirmPassword.value = it },
-//                    label = { Text("Confirm new password") },
-//                    visualTransformation = PasswordVisualTransformation(),
-//                    colors = OutlinedTextFieldDefaults.colors(
-//                        cursorColor = Color.White,
-//                        unfocusedContainerColor = Color.Black.copy(alpha = 0.5f),
-//                        focusedContainerColor = Color.Black.copy(alpha = 0.5f),
-//                        focusedBorderColor = Color.White,
-//                        unfocusedBorderColor = Saffron.copy(alpha = 0.5f),
-//                        unfocusedTextColor = Color.White,
-//                        focusedTextColor = Color.White,
-//                        unfocusedLabelColor = Color.LightGray,
-//                        focusedLabelColor = Color.LightGray,
-//                    ),
-//                    modifier = Modifier.fillMaxWidth(),
-//                    shape = RoundedCornerShape(100),
-//                )
+                if (passwordMismatchError) {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        "Passwords do not match",
+                        color = Color.Red,
+                        style = Typography.bodySmall,
+                        modifier = Modifier.fillMaxWidth(),
+                        textAlign = TextAlign.Center
+                    )
+                }
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {
                         if (newPassword.value == confirmPassword.value) {
-                            passwordChange(
-                                oldPassword.value,
-                                newPassword.value
-                            )
-                            onDismissRequest()
+                            passwordMismatchError = false
+                            pressed = true
+                            authViewModel.changePassword(oldPassword.value, newPassword.value)
+                        } else {
+                            passwordMismatchError = true
+                            pressed = false
                         }
                     },
                     modifier = Modifier
@@ -160,15 +160,35 @@ fun ChangePasswordDialog (
                     ),
                     contentPadding = PaddingValues(all = 0.dp)
                 ) {
-                    Text(
-                        "Update Password",
-                        style = Typography.titleSmall.copy(fontWeight = FontWeight.W600),
-                        modifier = Modifier.padding(vertical = 4.dp)
-                    )
+                    if(pressed) {
+                        when (signInstate) {
+                            is AuthResult.Success<String> -> {
+                                ButtonText("Password changed successfully")
+                                onDismissRequest()
+                            }
+                            is AuthResult.Error ->{
+                                ButtonText((signInstate as AuthResult.Error).message + " Try again")
+                            }
+                            is AuthResult.Loading ->{
+                                ButtonText("Loading...")
+                            }
+                        }
+                    } else {
+                        ButtonText("Update Password")
+                    }
                 }
             }
         }
     }
+}
+
+@Composable
+fun ButtonText(text: String) {
+    Text(
+        text,
+        style = Typography.titleSmall.copy(fontWeight = FontWeight.W600),
+        modifier = Modifier.padding(vertical = 4.dp)
+    )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -229,13 +249,13 @@ private fun NoPaddingTextField(
 }
 
 
-@Preview(showBackground = true)
-@Composable
-fun ChangePasswordDialogPreview() { // Renamed for clarity to avoid conflicts
-    ChangePasswordDialog(
-        onDismissRequest = { },// The lambda now has the correct syntax
-        passwordChange = { _, _ ->
-            // This is a preview, so the function body can be empty.
-        }
-    )
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun ChangePasswordDialogPreview() { // Renamed for clarity to avoid conflicts
+//    ChangePasswordDialog(
+//        onDismissRequest = { },// The lambda now has the correct syntax
+//        passwordChange = { _, _ ->
+//            // This is a preview, so the function body can be empty.
+//        }
+//    )
+//}

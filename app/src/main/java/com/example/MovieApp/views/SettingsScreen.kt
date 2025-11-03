@@ -56,6 +56,7 @@ import com.example.MovieApp.ui.theme.Grapefruit
 import com.example.MovieApp.ui.theme.OldBrick
 import com.example.MovieApp.ui.theme.Saffron
 import com.example.MovieApp.ui.theme.Typography
+import com.example.MovieApp.viewModels.AuthViewModel
 import com.example.MovieApp.viewModels.SettingsViewModel
 import kotlinx.coroutines.launch
 
@@ -63,7 +64,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun SettingsScreen(
     navController: NavController,
-    settingsViewModel: SettingsViewModel
+    settingsViewModel: SettingsViewModel,
+    authViewModel: AuthViewModel
 ) {
     val darkMode by settingsViewModel.darkMode.collectAsState()
     val coroutineScope = rememberCoroutineScope()
@@ -72,9 +74,7 @@ fun SettingsScreen(
     if (openAlertDialog.value) {
         ChangePasswordDialog(
             onDismissRequest = { openAlertDialog.value = false },
-            passwordChange = { oldPassword, newPassword ->
-                openAlertDialog.value = false
-            }
+            authViewModel = authViewModel
         )
     }
 
@@ -154,14 +154,14 @@ fun SettingsScreen(
                     },
                     checked = darkMode
                 )
-                Spacer(modifier = Modifier.height(28.dp))
-                ButtonSettingsCard(
-                    title = "Profile Picture",
-                    description = "Update your avatar image",
-                    icon = Icons.Outlined.Person,
-                    buttonText = "Change Picture",
-                    onButtonClick = {}
-                )
+//                Spacer(modifier = Modifier.height(28.dp))
+//                ButtonSettingsCard(
+//                    title = "Profile Picture",
+//                    description = "Update your avatar image",
+//                    icon = Icons.Outlined.Person,
+//                    buttonText = "Change Picture",
+//                    onButtonClick = {}
+//                )
                 Spacer(modifier = Modifier.height(28.dp))
                 AboutCard()
             }

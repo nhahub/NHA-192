@@ -117,7 +117,8 @@ class SplashingScreen : ComponentActivity() {
                     composable("settings") {
                         SettingsScreen(
                             navController = navController,
-                            settingsViewModel = settingsViewModel
+                            settingsViewModel = settingsViewModel,
+                            authViewModel = authViewModel
                         )
                     }
                 }
