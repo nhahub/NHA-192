@@ -73,4 +73,19 @@ class EmailPasswordAuthManagerRepository(
 
         // Get Current User
         fun getCurrentUser(): FirebaseUser? = auth.currentUser
+
+    // change password
+    suspend fun changePassword(email: String, oldPassword: String, newPassword: String): AuthResult<String> {
+        val signinResult = signIn(email, oldPassword)
+        return if (signinResult is AuthResult.Success) {
+            try { // Password can only be changed for a recently signed-in user.
+                auth.currentUser?.updatePassword(newPassword)?.await()
+                AuthResult.Success("Password changed successfully")
+            } catch (e: Exception) {
+                AuthResult.Error("Error changing password: ${e.message}")
+            }
+        } else {
+            signinResult as AuthResult.Error // Re-cast to Error and return the original sign-in error.
+        }
+    }
 }
