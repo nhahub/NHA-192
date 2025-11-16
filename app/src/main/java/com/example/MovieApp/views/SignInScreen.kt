@@ -63,7 +63,7 @@ fun SignInScreen(
         contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = painterResource(id = R.drawable.onboardingscreen2),
+            painter = painterResource(id = R.drawable.onboardingscreen1),
             contentDescription = "Sign Up Screen Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop

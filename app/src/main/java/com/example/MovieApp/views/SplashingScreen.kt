@@ -123,7 +123,7 @@ fun SplashingScreen(
     ){
         // Background image
         Image(
-            painter = painterResource(id = R.drawable.onboardingscreen2),
+            painter = painterResource(id = R.drawable.onboardingscreen1),
             contentDescription = "splash screen image",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
