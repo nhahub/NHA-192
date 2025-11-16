@@ -13,3 +13,22 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+local.properties
+
+# Gradle
+.gradle/
+build/
+
+# Log files
+*.log
+
+# Google Services (Secret file)
+google-services.json
+
+# Other
+app/src/main/res/raw/appinsights.properties
+.DS_Store
