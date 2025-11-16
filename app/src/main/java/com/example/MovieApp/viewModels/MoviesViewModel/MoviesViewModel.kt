@@ -20,9 +20,7 @@ class MoviesViewModel(
 
     fun getPopularMovies(page: Int) {
         viewModelScope.launch {
-            val response = repo.getPopularMovies(page)
-
-            when (response) {
+            when (val response = repo.getPopularMovies(page)) {
                 is UiState.Success -> _popularMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _popularMovies.value = UiState.Error(response.message)
                 else -> _popularMovies.value = UiState.Loading
