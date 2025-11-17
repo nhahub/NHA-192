@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
+import androidx.navigation.NavController
 
 
 data class BottomNavItem(
@@ -43,7 +44,7 @@ data class BottomNavItem(
 
 // 2. ده الـ Composable بتاع الـ Bottom Bar
 @Composable
-fun CustomBottomNavBar(modifier: Modifier = Modifier) {
+fun CustomBottomNavBar(modifier: Modifier = Modifier , navController: NavController) {
 
     var selectedIndex by remember { mutableStateOf(0) }
 
@@ -53,6 +54,7 @@ fun CustomBottomNavBar(modifier: Modifier = Modifier) {
         BottomNavItem("稍后", Icons.Default.Delete)
     )
 
+    val Screen =listOf("home","favorites","watchlater")
 
     val selectedBorderBrush = Brush.linearGradient(
         listOf(Color(0xFFFDEB71), Color(0xFFF8D423))
@@ -102,7 +104,10 @@ fun CustomBottomNavBar(modifier: Modifier = Modifier) {
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = { selectedIndex = index }
+                        onClick = {
+                            selectedIndex = index
+                            navController.navigate(Screen[index])
+                        }
                     ),
                 contentAlignment = Alignment.Center
             ) {
