@@ -18,7 +18,59 @@ class RemoteDataSourceImpl(
             if (response.isSuccessful) {
                 val body = response.body()
                 if (body != null) {
-                    UiState.Success(body.results ?: emptyList())
+                    UiState.Success(body.results)
+                } else {
+                    UiState.Error("Empty response body is equal to null")
+                }
+            } else {
+                val serverMsg = response.errorBody()?.string()?.takeIf { it.isNotBlank() }
+                UiState.Error("HTTP ${response.code()}: ${serverMsg ?: response.message()}")
+            }
+        }catch (e: IOException) {
+            // catch network-related errors
+            UiState.Error("No internet connection. Please check your network.")
+        } catch (e: HttpException) {
+            // catch HTTP protocol errors
+            UiState.Error("Server error: ${e.code()}")
+        } catch (e: Exception) {
+            // catch any other unexpected errors
+            UiState.Error("Unexpected error occurred. Please try again later.")
+        }
+    }
+
+    override suspend fun getUpComingMovies(page: Int): UiState<List<Movie>> {
+        return try {
+            val response = apiServices.getUpcomingMovies(page = page)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    UiState.Success(body.results)
+                } else {
+                    UiState.Error("Empty response body is equal to null")
+                }
+            } else {
+                val serverMsg = response.errorBody()?.string()?.takeIf { it.isNotBlank() }
+                UiState.Error("HTTP ${response.code()}: ${serverMsg ?: response.message()}")
+            }
+        }catch (e: IOException) {
+            // catch network-related errors
+            UiState.Error("No internet connection. Please check your network.")
+        } catch (e: HttpException) {
+            // catch HTTP protocol errors
+            UiState.Error("Server error: ${e.code()}")
+        } catch (e: Exception) {
+            // catch any other unexpected errors
+            UiState.Error("Unexpected error occurred. Please try again later.")
+        }
+    }
+
+    override suspend fun getTopRatedMovies(page: Int): UiState<List<Movie>> {
+        return try {
+            val response = apiServices.getTopRatedMovies(page = page)
+            if (response.isSuccessful) {
+                val body = response.body()
+                if (body != null) {
+                    UiState.Success(body.results)
                 } else {
                     UiState.Error("Empty response body is equal to null")
                 }

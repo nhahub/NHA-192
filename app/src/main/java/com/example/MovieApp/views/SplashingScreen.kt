@@ -1,5 +1,6 @@
 package com.example.MovieApp.views
 
+import MainScreen
 import androidx.compose.ui.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -57,7 +58,7 @@ import kotlinx.coroutines.delay
 
 class SplashingScreen : ComponentActivity() {
     // creating view model instance by factory design pattern
-    val viewModel : MoviesViewModel by viewModels {
+    val viewModel: MoviesViewModel by viewModels {
         MoviesViewModelFactory(
             repo = MoviesRepositoryImpl(
                 remoteDataSource = RemoteDataSourceImpl()
@@ -65,7 +66,7 @@ class SplashingScreen : ComponentActivity() {
         )
     }
 
-    val authViewModel : AuthViewModel by viewModels {
+    val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory(
             repo = EmailPasswordAuthManagerRepository()
         )
@@ -89,10 +90,10 @@ class SplashingScreen : ComponentActivity() {
             SplashScreenTheme {
                 NavHost(
                     navController = navController,
-                    startDestination = "splash_screen"
+                    startDestination = "main_screen"
                 ) {
                     composable("splash_screen") {
-                        SplashingScreen(viewModel = viewModel , navController = navController)
+                        SplashingScreen(viewModel = viewModel, navController = navController)
                     }
                     composable("auth_screen") {
                         AuthScreen(navController = navController)
@@ -109,8 +110,8 @@ class SplashingScreen : ComponentActivity() {
                             navController = navController
                         )
                     }
-                    composable("main_screen") {
-                        MainScreen(
+                    composable("settings_button_screen") {
+                        SettingsButton(
                             navController = navController
                         )
                     }
@@ -119,6 +120,11 @@ class SplashingScreen : ComponentActivity() {
                             navController = navController,
                             settingsViewModel = settingsViewModel,
                             authViewModel = authViewModel
+                        )
+                    }
+                    composable("main_screen") {
+                        MainScreen(
+                            viewModel = viewModel
                         )
                     }
                 }

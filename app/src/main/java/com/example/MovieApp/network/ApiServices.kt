@@ -1,13 +1,32 @@
 package com.example.MovieApp.network
 
 import com.example.MovieApp.dto.MovieResponse
+import com.example.MovieApp.dto.UpComingMoviesResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiServices {
+
+    // Popular Movies
     @GET("movie/popular")
     suspend fun getPopularMovies(
+        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int
+    ): Response<MovieResponse>
+
+    // Upcoming Movies
+    @GET("movie/upcoming")
+    suspend fun getUpcomingMovies(
+        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("language") language: String = "en-US",
+        @Query("page") page: Int
+    ): Response<UpComingMoviesResponse>
+
+    // Top Rated Movies
+    @GET("movie/top_rated")
+    suspend fun getTopRatedMovies(
         @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
         @Query("language") language: String = "en-US",
         @Query("page") page: Int

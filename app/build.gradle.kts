@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.googleid)
     // for cloud firestore
     implementation(libs.firebase.firestore)
+    implementation(libs.androidx.compose.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -77,4 +78,7 @@ dependencies {
 
     // datastore for settings
     implementation(libs.datastore.preferences)
+
+    // Coil dependency
+    implementation(libs.coil.compose)
 }

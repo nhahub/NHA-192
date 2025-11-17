@@ -14,9 +14,10 @@ class MoviesViewModel(
     private val repo : MoviesRepository
 ) : ViewModel()  {
 
+    // Popular Movies
     private val _popularMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-
     val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
+
 
     fun getPopularMovies(page: Int) {
         viewModelScope.launch {
@@ -27,4 +28,37 @@ class MoviesViewModel(
             }
         }
     }
+
+    // Upcoming Movies
+    private val _UpComingMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
+
+    val UpComingMovies : StateFlow<UiState<List<Movie>>> = _UpComingMovies.asStateFlow()
+
+    fun getUpComingMovies(page: Int) {
+        viewModelScope.launch {
+            when (val response = repo.getUpComingMovies(page)) {
+                is UiState.Success -> _UpComingMovies.value = UiState.Success(response.data)
+                is UiState.Error -> _UpComingMovies.value = UiState.Error(response.message)
+                else -> _UpComingMovies.value = UiState.Loading
+            }
+        }
+    }
+
+
+    // Top Rated Movies
+
+    private val _TopRatedMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
+
+    val TopRatedMovies : StateFlow<UiState<List<Movie>>> = _TopRatedMovies.asStateFlow()
+
+    fun getTopRatedMovies(page: Int) {
+        viewModelScope.launch {
+            when (val response = repo.getTopRatedMovies(page)) {
+                is UiState.Success -> _TopRatedMovies.value = UiState.Success(response.data)
+                is UiState.Error -> _TopRatedMovies.value = UiState.Error(response.message)
+                else -> _TopRatedMovies.value = UiState.Loading
+            }
+        }
+    }
+
 }
