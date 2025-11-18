@@ -1,5 +1,6 @@
 package com.example.MovieApp.views
 
+
 import MovieCard
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
@@ -51,12 +53,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.navigation.NavController
 import com.example.MovieApp.dto.Movie
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier) {
+fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navController: NavController) {
 
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -78,8 +81,11 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier) {
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
-            ModalDrawerSheet {
-                Text("Navigation Drawer", modifier = Modifier.padding(16.dp))
+            ModalDrawerSheet(
+                windowInsets = WindowInsets(0.dp)
+            ) {
+                // THe Shape of the Nav Drawer is Here
+                DrawerContent(navController = navController)
             }
         }
     ) {
@@ -243,7 +249,7 @@ fun SectionMovies(title: String, state: UiState<List<Movie>>) {
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp),
+                .padding(top = 20.dp , start= 10.dp ),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             when (state) {

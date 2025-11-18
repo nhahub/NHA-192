@@ -9,4 +9,5 @@ interface MoviesRepository {
 
     suspend fun getTopRatedMovies(page: Int) : UiState<List<Movie>>
 
+    suspend fun getMoviesByGenre(page : Int , genreId : Int) : UiState<List<Movie>>
 }

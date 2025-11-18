@@ -9,7 +9,11 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import com.example.MovieApp.viewModels.fake.FakeMoviesRepository
+import com.example.MovieApp.views.ActionMovies
+import com.example.MovieApp.views.AdvantureMovies
+import com.example.MovieApp.views.ComedyMovies
 import com.example.MovieApp.views.CustomBottomNavBar
+import com.example.MovieApp.views.FantasyMovies
 import com.example.MovieApp.views.FavoritesScreen
 import com.example.MovieApp.views.HomeScreen
 import com.example.MovieApp.views.WatchLaterScreen
@@ -32,7 +36,7 @@ fun MainScreen(viewModel: MoviesViewModel) {
             modifier = Modifier.padding(padding)
         ) {
             composable("home") {
-                HomeScreen(viewModel)
+                HomeScreen(viewModel, navController=navController)
             }
             composable("favorites") {
                 FavoritesScreen()
@@ -40,17 +44,18 @@ fun MainScreen(viewModel: MoviesViewModel) {
             composable("watchlater") {
                 WatchLaterScreen()
             }
+            composable("Action") {
+                ActionMovies(viewModel = viewModel)
+            }
+            composable("Adventure") {
+                AdvantureMovies(viewModel = viewModel)
+            }
+            composable("Comedy") {
+                ComedyMovies(viewModel = viewModel)
+            }
+            composable("Fantasy") {
+                FantasyMovies(viewModel = viewModel)
+            }
         }
     }
-}
-
-
-
-@Preview(showBackground = true)
-@Composable
-fun PreviewMainScreen() {
-    val fakeRepo = FakeMoviesRepository()
-    val fakeViewModel = MoviesViewModel(fakeRepo)
-
-    MainScreen(viewModel = fakeViewModel)
 }

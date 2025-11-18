@@ -59,6 +59,7 @@ dependencies {
     // for cloud firestore
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.compose.ui)
+    implementation(libs.androidx.compose.material3)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -81,4 +82,7 @@ dependencies {
 
     // Coil dependency
     implementation(libs.coil.compose)
+
+    // Icons dependency
+    implementation(libs.material.icons.extended)
 }

@@ -9,4 +9,6 @@ interface RemoteDataSource {
 
     suspend fun getTopRatedMovies(page: Int) : UiState<List<Movie>>
 
+    suspend fun getMoviesByGenre(genreId: Int, page: Int) : UiState<List<Movie>>
+
 }

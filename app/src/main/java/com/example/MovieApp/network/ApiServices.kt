@@ -31,4 +31,13 @@ interface ApiServices {
         @Query("language") language: String = "en-US",
         @Query("page") page: Int
     ): Response<MovieResponse>
+
+    // Get Movies
+    @GET("discover/movie")
+    suspend fun getMoviesByGenre(
+        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("with_genres") genreId: Int = 28,
+        @Query("page") page: Int = 1,
+        @Query("language") language: String = "en-US"
+    ): Response<MovieResponse>
 }

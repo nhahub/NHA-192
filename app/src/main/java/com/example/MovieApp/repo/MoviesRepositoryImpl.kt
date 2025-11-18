@@ -18,4 +18,11 @@ class MoviesRepositoryImpl(
     override suspend fun getTopRatedMovies(page: Int): UiState<List<Movie>> {
         return remoteDataSource.getTopRatedMovies(page = page)
     }
+
+    override suspend fun getMoviesByGenre(
+        page: Int,
+        genreId: Int
+    ): UiState<List<Movie>> {
+        return remoteDataSource.getMoviesByGenre(page = page, genreId = genreId)
+    }
 }
