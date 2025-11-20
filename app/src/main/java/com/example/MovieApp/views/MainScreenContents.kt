@@ -8,7 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import com.example.MovieApp.views.ActionMovies
-import com.example.MovieApp.views.AdvantureMovies
+import com.example.MovieApp.views.AdventureMovies
 import com.example.MovieApp.views.ComedyMovies
 import com.example.MovieApp.views.CustomBottomNavBar
 import com.example.MovieApp.views.FantasyMovies
@@ -45,16 +45,16 @@ fun MainScreen(viewModel: MoviesViewModel) {
                 WatchLaterScreen(viewModel = viewModel)
             }
             composable("Action") {
-                ActionMovies(viewModel = viewModel)
+                ActionMovies(viewModel = viewModel, navController=navController)
             }
             composable("Adventure") {
-                AdvantureMovies(viewModel = viewModel)
+                AdventureMovies(viewModel = viewModel,navController=navController)
             }
             composable("Comedy") {
-                ComedyMovies(viewModel = viewModel)
+                ComedyMovies(viewModel = viewModel, navController=navController)
             }
             composable("Fantasy") {
-                FantasyMovies(viewModel = viewModel)
+                FantasyMovies(viewModel = viewModel, navController=navController)
             }
             composable("search") {
                 SearchScreen(

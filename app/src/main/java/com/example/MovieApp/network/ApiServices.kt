@@ -1,5 +1,6 @@
 package com.example.MovieApp.network
 
+import com.example.MovieApp.BuildConfig
 import com.example.MovieApp.dto.MovieResponse
 import com.example.MovieApp.dto.UpComingMoviesResponse
 import retrofit2.Response
@@ -11,7 +12,7 @@ interface ApiServices {
     // Popular Movies
     @GET("movie/popular")
     suspend fun getPopularMovies(
-        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("api_key") apiKey: String = BuildConfig.MOVIE_API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int
     ): Response<MovieResponse>
@@ -19,7 +20,7 @@ interface ApiServices {
     // Upcoming Movies
     @GET("movie/upcoming")
     suspend fun getUpcomingMovies(
-        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("api_key") apiKey: String = BuildConfig.MOVIE_API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int
     ): Response<UpComingMoviesResponse>
@@ -27,7 +28,7 @@ interface ApiServices {
     // Top Rated Movies
     @GET("movie/top_rated")
     suspend fun getTopRatedMovies(
-        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("api_key") apiKey: String = BuildConfig.MOVIE_API_KEY,
         @Query("language") language: String = "en-US",
         @Query("page") page: Int
     ): Response<MovieResponse>
@@ -35,7 +36,7 @@ interface ApiServices {
     // Get Movies
     @GET("discover/movie")
     suspend fun getMoviesByGenre(
-        @Query("api_key") apiKey: String = "8375062ce126aac7379b665b2af3d0ed",
+        @Query("api_key") apiKey: String = BuildConfig.MOVIE_API_KEY,
         @Query("with_genres") genreId: Int = 28,
         @Query("page") page: Int = 1,
         @Query("language") language: String = "en-US"
