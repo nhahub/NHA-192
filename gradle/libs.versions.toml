@@ -31,6 +31,7 @@ icons="1.5.4"
 
 #Room database
 roomVersion = "2.8.1"
+junitJunit = "4.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -73,6 +74,7 @@ room-runtime={ group = "androidx.room", name = "room-runtime", version.ref = "ro
 room-compiler={ group = "androidx.room", name = "room-compiler", version.ref = "roomVersion" }
 room-ktx={ group = "androidx.room", name = "room-ktx", version.ref = "roomVersion" }
 room-testing={ group = "androidx.room", name = "room-testing", version.ref = "roomVersion" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
