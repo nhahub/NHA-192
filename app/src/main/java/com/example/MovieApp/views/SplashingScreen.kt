@@ -48,6 +48,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.R
 import com.example.MovieApp.auth.EmailPasswordAuthManagerRepository
+import com.example.MovieApp.database.LocalDataSourceImpl
 import com.example.MovieApp.datastore.DataStoreManager
 import com.example.MovieApp.repo.SettingsRepositoryImpl
 import com.example.MovieApp.viewModels.AuthViewModel
@@ -61,7 +62,8 @@ class SplashingScreen : ComponentActivity() {
     val viewModel: MoviesViewModel by viewModels {
         MoviesViewModelFactory(
             repo = MoviesRepositoryImpl(
-                remoteDataSource = RemoteDataSourceImpl()
+                remoteDataSource = RemoteDataSourceImpl(),
+                localDataSource = LocalDataSourceImpl(this)
             )
         )
     }
@@ -233,7 +235,7 @@ fun SplashingScreen(
 @Composable
 fun SplashScreenPreview() {
     val fakeViewModel = MoviesViewModelFactory(
-        repo = MoviesRepositoryImpl(RemoteDataSourceImpl())
+        repo = MoviesRepositoryImpl(RemoteDataSourceImpl(), LocalDataSourceImpl(LocalContext.current))
     ).create(MoviesViewModel::class.java)
 
     SplashingScreen(viewModel = fakeViewModel , navController = NavController(LocalContext.current))

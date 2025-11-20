@@ -3,12 +3,10 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
-import com.example.MovieApp.viewModels.fake.FakeMoviesRepository
 import com.example.MovieApp.views.ActionMovies
 import com.example.MovieApp.views.AdvantureMovies
 import com.example.MovieApp.views.ComedyMovies
@@ -39,10 +37,10 @@ fun MainScreen(viewModel: MoviesViewModel) {
                 HomeScreen(viewModel, navController=navController)
             }
             composable("favorites") {
-                FavoritesScreen()
+                FavoritesScreen(viewModel = viewModel)
             }
             composable("watchlater") {
-                WatchLaterScreen()
+                WatchLaterScreen(viewModel = viewModel)
             }
             composable("Action") {
                 ActionMovies(viewModel = viewModel)

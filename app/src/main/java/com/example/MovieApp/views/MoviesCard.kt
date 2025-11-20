@@ -38,7 +38,6 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
     // A Column to hold the card content
     Column(
         modifier = modifier
-            .width(170.dp)
     ) {
 
         // A Box for the movie poster with a border
@@ -48,7 +47,7 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
                 .height(240.dp)
 
                 .border(
-                    width = 3.dp, // عرض البرواز
+                    width = 3.dp,
                     brush = cardBorderGradient,
                     shape = cardShape
                 )

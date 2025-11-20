@@ -10,13 +10,13 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(
+open class MoviesViewModel(
     private val repo : MoviesRepository
 ) : ViewModel()  {
 
     // Popular Movies
     private val _popularMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
+    open val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
 
 
     fun getPopularMovies(page: Int) {
@@ -126,4 +126,44 @@ class MoviesViewModel(
         }
     }
 
+    // Favorite Movies
+
+    private val _FavoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
+
+    val FavoriteMovies : StateFlow<List<Movie>> = _FavoriteMovies.asStateFlow()
+
+    // for getting the favorite movies from the database
+    fun getFavoriteMovies() {
+        viewModelScope.launch {
+            _FavoriteMovies.value = repo.getFavoriteMovies()
+        }
+    }
+
+    // WatchLater Movies
+
+    private val _WatchLaterMovies = MutableStateFlow<List<Movie>>(emptyList())
+
+    val WatchLaterMovies : StateFlow<List<Movie>> = _WatchLaterMovies.asStateFlow()
+
+    // for getting the watch later movies from the database
+
+    fun getWatchLaterMovies() {
+        viewModelScope.launch {
+            _FavoriteMovies.value = repo.getWatchLaterMovies()
+        }
+    }
+
+    // for inserting the movie in the database
+    fun insertInDataBase(movie: Movie) {
+        viewModelScope.launch {
+            repo.insert(movie)
+        }
+    }
+
+    // for deleting the movie from the database
+    fun deleteMovie(movie: Movie) {
+        viewModelScope.launch {
+            repo.delete(movie)
+        }
+    }
 }

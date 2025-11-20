@@ -15,7 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.AccessTimeFilled
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
@@ -42,7 +42,6 @@ data class BottomNavItem(
     val icon: ImageVector
 )
 
-// 2. ده الـ Composable بتاع الـ Bottom Bar
 @Composable
 fun CustomBottomNavBar(modifier: Modifier = Modifier , navController: NavController) {
 
@@ -51,7 +50,7 @@ fun CustomBottomNavBar(modifier: Modifier = Modifier , navController: NavControl
     val items = listOf(
         BottomNavItem("首页", Icons.Default.Home),
         BottomNavItem("收藏", Icons.Default.Favorite),
-        BottomNavItem("稍后", Icons.Default.Delete)
+        BottomNavItem("稍后", Icons.Default.AccessTimeFilled)
     )
 
     val Screen =listOf("home","favorites","watchlater")
