@@ -149,7 +149,7 @@ fun UpcomimgMovies(viewModel: MoviesViewModel, navController: NavController){
                         verticalArrangement = Arrangement.spacedBy(8.dp),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        when (actionMoviesState) {
+                        when (upcomingMoviesState) {
                             is UiState.Loading -> {
                                 item {
                                     Text(
@@ -161,7 +161,7 @@ fun UpcomimgMovies(viewModel: MoviesViewModel, navController: NavController){
                             }
 
                             is UiState.Success -> {
-                                items(actionMoviesState.data) { movie ->
+                                items(upcomingMoviesState.data) { movie ->
                                     MovieCard(movie = movie)
                                 }
                             }
@@ -169,7 +169,7 @@ fun UpcomimgMovies(viewModel: MoviesViewModel, navController: NavController){
                             is UiState.Error -> {
                                 item {
                                     Text(
-                                        text = "Error: ${actionMoviesState.message}",
+                                        text = "Error: ${upcomingMoviesState.message}",
                                         color = Color.Red,
                                         modifier = Modifier.padding(16.dp)
                                     )
