@@ -8,13 +8,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import com.example.MovieApp.views.ActionMovies
-import com.example.MovieApp.views.AdvantureMovies
+import com.example.MovieApp.views.AdventureMovies
 import com.example.MovieApp.views.ComedyMovies
 import com.example.MovieApp.views.CustomBottomNavBar
 import com.example.MovieApp.views.FantasyMovies
 import com.example.MovieApp.views.FavoritesScreen
 import com.example.MovieApp.views.HomeScreen
+import com.example.MovieApp.views.SearchScreen
 import com.example.MovieApp.views.WatchLaterScreen
+import com.example.movie_app.MovieDetailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -43,16 +45,26 @@ fun MainScreen(viewModel: MoviesViewModel) {
                 WatchLaterScreen(viewModel = viewModel)
             }
             composable("Action") {
-                ActionMovies(viewModel = viewModel)
+                ActionMovies(viewModel = viewModel, navController=navController)
             }
             composable("Adventure") {
-                AdvantureMovies(viewModel = viewModel)
+                AdventureMovies(viewModel = viewModel,navController=navController)
             }
             composable("Comedy") {
-                ComedyMovies(viewModel = viewModel)
+                ComedyMovies(viewModel = viewModel, navController=navController)
             }
             composable("Fantasy") {
-                FantasyMovies(viewModel = viewModel)
+                FantasyMovies(viewModel = viewModel, navController=navController)
+            }
+            composable("search") {
+                SearchScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() },
+                    onMovieClick = { navController.navigate("movie_detail") }
+                )
+            }
+            composable("movie_detail") {
+                MovieDetailScreen()
             }
         }
     }

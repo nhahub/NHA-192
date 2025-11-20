@@ -1,3 +1,9 @@
+import java.util.Properties
+import java.io.FileInputStream
+
+// movie api key
+val MOVIE_API_KEY: String by project
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +11,7 @@ plugins {
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.kotlin.kapt)
 }
+
 
 android {
     namespace = "com.example.MovieApp"
@@ -18,26 +25,30 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-    }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
+        // Expose MOVIE _API_KEY to BuildConfig
+        buildConfigField("String", "MOVIE_API_KEY", "\"$MOVIE_API_KEY\"")
+
+        buildTypes {
+            release {
+                isMinifyEnabled = false
+                proguardFiles(
+                    getDefaultProguardFile("proguard-android-optimize.txt"),
+                    "proguard-rules.pro"
+                )
+            }
         }
-    }
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
-    }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
-    buildFeatures {
-        compose = true
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_11
+            targetCompatibility = JavaVersion.VERSION_11
+        }
+        kotlinOptions {
+            jvmTarget = "11"
+        }
+        buildFeatures {
+            compose = true
+            buildConfig = true
+        }
     }
 }
 

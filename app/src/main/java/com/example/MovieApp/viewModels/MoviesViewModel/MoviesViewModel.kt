@@ -6,8 +6,11 @@ import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.dto.Movie
 import com.example.MovieApp.repo.MoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 open class MoviesViewModel(
@@ -165,5 +168,62 @@ open class MoviesViewModel(
         viewModelScope.launch {
             repo.delete(movie)
         }
+    }
+
+    // Search Logic: Merges Action, Adventure, Comedy, and Fantasy movies
+    private val _searchText = MutableStateFlow("")
+    val searchText = _searchText.asStateFlow()
+
+    // Combine all genres first (helper flow) to avoid combine 5+ args issue
+    private val _mergedGenreMovies = combine(
+        _ActionMovies,
+        _AdventureMovies,
+        _ComedyMovies,
+        _FantasyMovies
+    ) { action, adventure, comedy, fantasy ->
+        val movies = mutableListOf<Movie>()
+        fun add(state: UiState<List<Movie>>) {
+            if (state is UiState.Success) movies.addAll(state.data)
+        }
+        add(action)
+        add(adventure)
+        add(comedy)
+        add(fantasy)
+        movies.distinctBy { it.id }
+    }
+
+    // Final search results combining search text, popular movies, and merged genres
+    val searchResults: StateFlow<UiState<List<Movie>>> = combine(
+        _searchText,
+        _popularMovies,
+        _mergedGenreMovies
+    ) { text, popularState, genreMovies ->
+        
+        if (text.isBlank()) {
+             // Return popular movies if search text is empty
+            popularState
+        } else {
+            // Filter locally
+            val filtered = genreMovies.filter {
+                it.title.contains(text, ignoreCase = true)
+            }
+            UiState.Success(filtered)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = UiState.Loading
+    )
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
+    
+    // Helper to trigger loading of all sections needed for search
+    fun loadAllSectionMovies() {
+        if (_ActionMovies.value !is UiState.Success) getActionMovies(1)
+        if (_AdventureMovies.value !is UiState.Success) getAdventureMovies(1)
+        if (_ComedyMovies.value !is UiState.Success) getComedyMovies(1)
+        if (_FantasyMovies.value !is UiState.Success) getFantasyMovies(1)
     }
 }
