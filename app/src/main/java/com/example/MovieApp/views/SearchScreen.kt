@@ -155,10 +155,10 @@ fun SearchScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewSearchScreen() {
-    val fakeRepo = FakeMoviesRepository()
-    val viewModel = MoviesViewModel(fakeRepo)
-    SearchScreen(viewModel = viewModel, onBack = {}, onMovieClick = {})
-}
+//@Preview(showBackground = true, showSystemUi = true)
+//@Composable
+//fun PreviewSearchScreen() {
+//    val fakeRepo = FakeMoviesRepository()
+//    val viewModel = MoviesViewModel(fakeRepo)
+//    SearchScreen(viewModel = viewModel, onBack = {}, onMovieClick = {})
+//}
