@@ -15,6 +15,7 @@ import com.example.MovieApp.views.FantasyMovies
 import com.example.MovieApp.views.FavoritesScreen
 import com.example.MovieApp.views.HomeScreen
 import com.example.MovieApp.views.SearchScreen
+import com.example.MovieApp.views.TopRatedMoviesScreen
 import com.example.MovieApp.views.WatchLaterScreen
 import com.example.movie_app.MovieDetailScreen
 
@@ -55,6 +56,9 @@ fun MainScreen(viewModel: MoviesViewModel) {
             }
             composable("Fantasy") {
                 FantasyMovies(viewModel = viewModel, navController=navController)
+            }
+            composable("TopRated") {
+                TopRatedMoviesScreen(viewModel = viewModel, navController=navController)
             }
             composable("search") {
                 SearchScreen(
