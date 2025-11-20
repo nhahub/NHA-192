@@ -14,7 +14,9 @@ import com.example.MovieApp.views.CustomBottomNavBar
 import com.example.MovieApp.views.FantasyMovies
 import com.example.MovieApp.views.FavoritesScreen
 import com.example.MovieApp.views.HomeScreen
+import com.example.MovieApp.views.SearchScreen
 import com.example.MovieApp.views.WatchLaterScreen
+import com.example.movie_app.MovieDetailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -53,6 +55,16 @@ fun MainScreen(viewModel: MoviesViewModel) {
             }
             composable("Fantasy") {
                 FantasyMovies(viewModel = viewModel)
+            }
+            composable("search") {
+                SearchScreen(
+                    viewModel = viewModel,
+                    onBack = { navController.popBackStack() },
+                    onMovieClick = { navController.navigate("movie_detail") }
+                )
+            }
+            composable("movie_detail") {
+                MovieDetailScreen()
             }
         }
     }

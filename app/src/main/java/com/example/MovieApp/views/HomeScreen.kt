@@ -9,6 +9,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -150,40 +151,43 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
                             }
                         }
 
-                        // Search bar
-                        OutlinedTextField(
-                            value = searchText,
-                            onValueChange = { searchText = it },
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = null,
-                                    tint = Color(0xFFFFD54F)
-                                )
-                            },
-                            placeholder = {
-                                Text(
-                                    "搜索电影... Search movies...",
-                                    color = Color(0xFFBDBDBD)
-                                )
-                            },
-                            textStyle = LocalTextStyle.current.copy(
-                                color = Color(0xFFE0E0E0)
-                            ),
+                        Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 10.dp)
-                                .background(
-                                    color = Color(0xFF3A0000),
-                                    shape = RoundedCornerShape(16.dp)
-                                ),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                unfocusedBorderColor = Color(0xFFFFD54F),
-                                focusedBorderColor = Color(0xFFFFEB3B),
-                                cursorColor = Color(0xFFFFEB3B),
+                                .clickable {
+                                    navController.navigate("search")
+                                }
+                        ) {
+                            OutlinedTextField(
+                                value = searchText,
+                                onValueChange = {},
+                                enabled = false,
+                                readOnly = true,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Search,
+                                        contentDescription = null,
+                                        tint = Color(0xFFFFD54F)
+                                    )
+                                },
+                                placeholder = {
+                                    Text(
+                                        "搜索电影... Search movies...",
+                                        color = Color(0xFFBDBDBD)
+                                    )
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledBorderColor = Color(0xFFFFD54F),
+                                    disabledTextColor = Color(0xFFE0E0E0),
+                                    cursorColor = Color(0xFFFFEB3B)
+                                )
                             )
-                        )
+                        }
 
                     }
                 }
