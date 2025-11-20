@@ -255,7 +255,7 @@ fun ActionButtons() {
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        // Secondary Icon Buttons
+        // call of secondary Icon Buttons
         ActionButton(icon = Icons.Default.FavoriteBorder, description = "Favorite")
         ActionButton(icon = Icons.Default.AccessTime, description = "Watch Later")
         ActionButton(icon = Icons.Default.Share, description = "Share")
@@ -355,26 +355,23 @@ fun InfoCardsSection(movie: Movie) {
             horizontalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             SmallInfoCard(
-                label = "Release Year",
+                label = "Release Date",
                 value = movie.release_date,
                 icon = Icons.Default.CalendarToday,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).padding(start = 16.dp)
             )
             SmallInfoCard(
                 label = "Rating",
                 value = "${movie.vote_average}/10",
                 icon = Icons.Default.StarBorder,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f).padding(end= 16.dp)
             )
 
         }
 }
 
-
-// --- 5. reusable helper composables ---
-
 /**
- * A small tag for info like rating, year, genre.
+ * A small tag for info like (rating, year).
  */
 @Composable
 fun InfoTag(text: String, icon: ImageVector? = null) {
