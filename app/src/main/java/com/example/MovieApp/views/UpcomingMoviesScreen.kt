@@ -60,6 +60,8 @@ fun UpcomimgMovies(viewModel: MoviesViewModel, navController: NavController){
     LaunchedEffect(Unit) {
         viewModel.getFantasyMovies(1)
     }
+
+
     ModalNavigationDrawer(
         drawerState = drawerState,
         drawerContent = {
@@ -69,7 +71,118 @@ fun UpcomimgMovies(viewModel: MoviesViewModel, navController: NavController){
                 DrawerContent(navController = navController)
             }
         }
-    ){
+    ) {
+        val upcomingMoviesState = viewModel.UpComingMovies.collectAsState().value
 
+        Box(modifier = Modifier.fillMaxSize()) {
+            Image(
+                painter = painterResource(id = R.drawable.movies_genres_bg_2),
+                contentDescription = "Sign Up Screen Background",
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x80000000))
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 10.dp)
+            ) {
+                Column {
+
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp)
+                            .clickable { navController.navigate("search") }
+                    ) {
+                        IconButton(onClick = {
+                            scope.launch { drawerState.open() }
+                        }) {
+                            Icon(
+                                Icons.Default.Menu,
+                                contentDescription = "Menu",
+                                tint = Color.White
+                            )
+                        }
+
+                        Spacer(modifier = Modifier.width(8.dp))
+
+                        OutlinedTextField(
+                            value = searchText,
+                            onValueChange = {},
+                            enabled = false,
+                            readOnly = true,
+                            leadingIcon = {
+                                Icon(
+                                    imageVector = Icons.Default.Search,
+                                    contentDescription = null,
+                                    tint = Color(0xFFFFD54F)
+                                )
+                            },
+                            placeholder = {
+                                Text(
+                                    "Search..",
+                                    color = Color(0xFFBDBDBD)
+                                )
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                                .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
+                            shape = RoundedCornerShape(16.dp),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                disabledBorderColor = Color(0xFFFFD54F),
+                                disabledTextColor = Color(0xFFE0E0E0),
+                                cursorColor = Color(0xFFFFEB3B)
+
+                            )
+                        )
+                    }
+
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(2),
+                        contentPadding = PaddingValues(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+                    ) {
+                        when (actionMoviesState) {
+                            is UiState.Loading -> {
+                                item {
+                                    Text(
+                                        "Loading...",
+                                        color = Color.White,
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                            }
+
+                            is UiState.Success -> {
+                                items(actionMoviesState.data) { movie ->
+                                    MovieCard(movie = movie)
+                                }
+                            }
+
+                            is UiState.Error -> {
+                                item {
+                                    Text(
+                                        text = "Error: ${actionMoviesState.message}",
+                                        color = Color.Red,
+                                        modifier = Modifier.padding(16.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
+
+
+
+
