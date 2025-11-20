@@ -126,7 +126,21 @@ fun DrawerContent(navController: NavController) {
                     },
                     onClick = { navController.navigate("Fantasy") }
                 )
+
+                // TopRated Movies in drawer
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = 12.dp), // تظبيط المسافات
+                    label = { Text("TopRated Movies") },
+                    selected = false,
+                    icon = {
+                        // (4) استخدمنا Filled.Call بعد ما عملنا Import
+                        Icon(Icons.Filled.Movie, contentDescription = null)
+                    },
+                    onClick = { navController.navigate("TopRated") }
+                )
             }
+
+
 
             // === الجزء السفلي (Settings Button) ===
             Button(
