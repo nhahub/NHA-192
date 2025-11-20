@@ -126,4 +126,12 @@ class MoviesViewModel(
         }
     }
 
+    private val _selectedMovie = MutableStateFlow<Movie?>(null)
+    val selectedMovie: StateFlow<Movie?> = _selectedMovie.asStateFlow()
+
+    // Function to SET the movie (call this when user clicks a card)
+    fun setSelectedMovie(movie: Movie) {
+        _selectedMovie.value = movie
+    }
+
 }

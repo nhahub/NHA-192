@@ -20,12 +20,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 
 @Composable
-fun FantasyMovies(viewModel: MoviesViewModel){
+fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
 
     LaunchedEffect(Unit) {
         viewModel.getFantasyMovies(1)
@@ -69,7 +70,7 @@ fun FantasyMovies(viewModel: MoviesViewModel){
 
                 is UiState.Success -> {
                     items(FantasyMoviesState.data) { movie ->
-                        MovieCard(movie = movie)
+                        MovieCard(movie = movie, navController = navController, viewModel = viewModel)
                     }
                 }
 
