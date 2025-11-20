@@ -66,7 +66,7 @@ val WightGrayText = Color(0xFFE7DADA)
 //    backgroundUrl = "https://placehold.co/600x400/503030/FFFFFF?text=Background" // Placeholder
 //)
 
-// ** 3. main screen composable**
+// ** 3. main screen composable functions **
 /**
  *  Scaffold used to  place the top back button.
  */
@@ -79,14 +79,14 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
 
     ) { paddingValues ->
         val movie by viewModel.selectedMovie.collectAsState()  // call the selected movie to the ui screen
-        // and check if the movie is empty
+        // and check if the movie is empty or not
         if (movie != null) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues) // padding from Scaffold
             ) {
-                //  section: header
+                //  safe call of functions to display the movie details
 
                 item {
                     MovieHeader(movie = movie!!, navController = navController)
@@ -105,7 +105,7 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
                 }
 
                 item {
-                    CastSection(cast = listOf("Chow Yun-fat", "Michelle Yeoh", "Zhang Ziyi"))
+                    CastSection(cast = listOf("Chow Yun-fat", "Michelle Yeoh", "Zhang Ziyi","John wick","Tom Cruise","Donnie Yen"))
                 }
 
                 item {
