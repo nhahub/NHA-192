@@ -6,20 +6,17 @@ import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.dto.Movie
 import com.example.MovieApp.repo.MoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-open class MoviesViewModel(
+class MoviesViewModel(
     private val repo : MoviesRepository
 ) : ViewModel()  {
 
     // Popular Movies
     private val _popularMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    open val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
+    val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
 
 
     fun getPopularMovies(page: Int) {
@@ -129,6 +126,7 @@ open class MoviesViewModel(
         }
     }
 
+
     // Favorite Movies
 
     private val _FavoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
@@ -198,9 +196,9 @@ open class MoviesViewModel(
         _popularMovies,
         _mergedGenreMovies
     ) { text, popularState, genreMovies ->
-        
+
         if (text.isBlank()) {
-             // Return popular movies if search text is empty
+            // Return popular movies if search text is empty
             popularState
         } else {
             // Filter locally
@@ -218,12 +216,20 @@ open class MoviesViewModel(
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
-    
+
     // Helper to trigger loading of all sections needed for search
     fun loadAllSectionMovies() {
         if (_ActionMovies.value !is UiState.Success) getActionMovies(1)
         if (_AdventureMovies.value !is UiState.Success) getAdventureMovies(1)
         if (_ComedyMovies.value !is UiState.Success) getComedyMovies(1)
         if (_FantasyMovies.value !is UiState.Success) getFantasyMovies(1)
+    }
+
+    private val _selectedMovie = MutableStateFlow<Movie?>(null)
+    val selectedMovie: StateFlow<Movie?> = _selectedMovie.asStateFlow()
+
+    // Function to SET the movie (call this when user clicks a card)
+    fun setSelectedMovie(movie: Movie) {
+        _selectedMovie.value = movie
     }
 }

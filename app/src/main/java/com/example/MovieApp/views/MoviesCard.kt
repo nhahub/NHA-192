@@ -1,4 +1,5 @@
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable // Import clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -17,12 +18,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.MovieApp.dto.Movie
 import coil.compose.AsyncImage
+import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 
 // A Composable that represents a movie card in the UI
 @Composable
-fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
+fun MovieCard(
+    movie: Movie,
+    modifier: Modifier = Modifier,
+    navController: NavController,
+    viewModel: MoviesViewModel
+) {
 
     // Define a gradient brush for the card border
     val cardBorderGradient = Brush.linearGradient(
@@ -38,6 +46,14 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
     // A Column to hold the card content
     Column(
         modifier = modifier
+            .width(170.dp)
+            // 2. Apply the clickable modifier here.
+            // We clip it to the cardShape so the ripple effect matches the rounded corners (optional but looks better)
+            .clip(RoundedCornerShape(12.dp))
+            .clickable(onClick = {
+                viewModel.setSelectedMovie(movie)
+                navController.navigate("MovieDetails")
+            })
     ) {
 
         // A Box for the movie poster with a border
@@ -45,15 +61,12 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(240.dp)
-
                 .border(
-                    width = 3.dp,
+                    width = 3.dp, // width of the border
                     brush = cardBorderGradient,
                     shape = cardShape
                 )
-
                 .padding(4.dp)
-
                 .clip(cardShape)
         ) {
             // Using Coil to load and display the movie poster
@@ -89,7 +102,7 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
             Icon(
                 imageVector = Icons.Filled.Star,
                 contentDescription = "Rating",
-                tint = Color(0xFFFFC107), // لون النجمة
+                tint = Color(0xFFFFC107), // Star color
                 modifier = Modifier.size(16.dp)
             )
 
@@ -114,28 +127,30 @@ fun MovieCard(movie: Movie, modifier: Modifier = Modifier) {
         }
     }
 }
+
 // A Preview of the MovieCard Composable
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun MovieCardPreview(){
-    MovieCard(
-        // A Mockup for MovieCard just to preview it
-        movie = Movie(
-            id = 1,
-            title = "The Shawshank Redemption",
-            overview = "Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.",
-            poster_path = "/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-            adult = false,
-            backdrop_path = "/backdrop_dummy.jpg",
-            genre_ids = listOf(18, 80),
-            original_language = "en",
-            original_title = "The Shawshank Redemption",
-            popularity = 100.0,
-            release_date = "1994-09-23",
-            video = false,
-            vote_average = 9.3,
-            vote_count = 2000
-        ),
-        modifier = Modifier.padding(8.dp)
-    )
-}
+//@Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF101010)
+//@Composable
+//fun MovieCardPreview(){
+//    MovieCard(
+//        movie = Movie(
+//            id = 1,
+//            title = "The Shawshank Redemption",
+//            overview = "Two imprisoned men bond over a number of years...",
+//            poster_path = "/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
+//            adult = false,
+//            backdrop_path = "/backdrop_dummy.jpg",
+//            genre_ids = listOf(18, 80),
+//            original_language = "en",
+//            original_title = "The Shawshank Redemption",
+//            popularity = 100.0,
+//            release_date = "1994-09-23",
+//            video = false,
+//            vote_average = 9.3,
+//            vote_count = 2000
+//        ),
+//        modifier = Modifier.padding(8.dp),
+//        navController = null,
+//        onClick = { /* Do nothing in preview */ } // 3. Pass empty lambda for preview
+//    )
+//}
