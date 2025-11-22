@@ -164,7 +164,7 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
 
                     is UiState.Success -> {
                         items(FantasyMoviesState.data) { movie ->
-                            MovieCard(movie = movie)
+                            MovieCard(movie = movie , navController = navController , viewModel = viewModel)
                         }
                     }
 

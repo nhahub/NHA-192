@@ -1,8 +1,12 @@
 package com.example.MovieApp.dto
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
-
+@Parcelize
+@Serializable
 @Entity(tableName = "movies")
 data class Movie(
     @PrimaryKey val id: Int,
@@ -19,6 +23,6 @@ data class Movie(
     val video: Boolean,
     val vote_average: Double,
     val vote_count: Int,
-    val isFavorite: Boolean = false,
-    val isWatchLater: Boolean = false
-)
+    var isFavorite: Boolean = false,
+    var isWatchLater: Boolean = false
+) : Parcelable

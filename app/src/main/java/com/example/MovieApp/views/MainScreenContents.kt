@@ -40,10 +40,10 @@ fun MainScreen(viewModel: MoviesViewModel) {
                 HomeScreen(viewModel, navController=navController)
             }
             composable("favorites") {
-                FavoritesScreen(viewModel = viewModel)
+                FavoritesScreen(viewModel = viewModel , navController=navController)
             }
             composable("watchlater") {
-                WatchLaterScreen(viewModel = viewModel)
+                WatchLaterScreen(viewModel = viewModel , navController = navController)
             }
             composable("Action") {
                 ActionMovies(viewModel = viewModel, navController=navController)
@@ -64,11 +64,13 @@ fun MainScreen(viewModel: MoviesViewModel) {
                 SearchScreen(
                     viewModel = viewModel,
                     onBack = { navController.popBackStack() },
-                    onMovieClick = { navController.navigate("movie_detail") }
+                    navController = navController
                 )
             }
-            composable("movie_detail") {
-                MovieDetailScreen()
+            composable("MovieDetails") {
+                MovieDetailScreen(
+                    viewModel = viewModel,navController = navController
+                )
             }
         }
     }

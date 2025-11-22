@@ -20,16 +20,13 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.MovieApp.dto.Movie
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
-import com.example.movie_app.LightGrayText
 
 //  **1. define colors & theme **
 
@@ -41,30 +38,6 @@ val MaroonChip = Color(0xFF4A141C)
 val LightGrayText = Color(0xFFB0B0B0)
 val WightGrayText = Color(0xFFE7DADA)
 
-//// **2. define data **
-//data class Movie(
-//    val title: String,
-//    val synopsis: String,
-//    val director: String,
-//    val cast: List<String>,
-//    val rating: String,
-//    val year: String,
-//    val duration: String,
-//    val posterUrl: String, // URL for the small poster
-//    val backgroundUrl: String // URL for the large header image
-//)
-
-//val sampleMovie = Movie(
-//    title = "Crouching Tiger, Hidden Dragon",
-//    synopsis = "A legendary martial arts master must retrieve a stolen sword and confront her past in this visually stunning epic.",
-//    director = "Ang Lee",
-//    cast = listOf("Chow Yun-fat", "Michelle Yeoh", "Zhang Ziyi"),
-//    rating = "9.2",
-//    year = "2000",
-//    duration = "120",
-//    posterUrl = "https://placehold.co/400x600/202020/F0C14B?text=Poster", // Placeholder
-//    backgroundUrl = "https://placehold.co/600x400/503030/FFFFFF?text=Background" // Placeholder
-//)
 
 // ** 3. main screen composable functions **
 /**
@@ -77,14 +50,14 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
     Scaffold(
         containerColor = DarkBackground,
 
-    ) { paddingValues ->
+        ) {
         val movie by viewModel.selectedMovie.collectAsState()  // call the selected movie to the ui screen
+
         // and check if the movie is empty or not
         if (movie != null) {
             LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues) // padding from Scaffold
             ) {
                 //  safe call of functions to display the movie details
 
@@ -93,7 +66,7 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
                 }
 
                 item {
-                    ActionButtons()
+                    ActionButtons(viewModel = viewModel , movie = movie!!)
                 }
 
                 item {
@@ -151,17 +124,17 @@ fun MovieHeader(movie: Movie, navController: NavController) {
         )
 
         Box( modifier = Modifier
-        .size(50.dp)
-        , // Darker yellow circle
-        contentAlignment = Alignment.Center){
-        IconButton(onClick = { navController.popBackStack()}) {
-            Icon(
-                Icons.AutoMirrored.Filled.ArrowBack,
-                contentDescription = "Back",
-                tint = Color.White
-            )
+            .size(50.dp)
+            , // Darker yellow circle
+            contentAlignment = Alignment.Center){
+            IconButton(onClick = { navController.popBackStack()}) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
         }
-    }
 
         // 2. Gradient Overlay (from transparent to dark)
         Box(
@@ -231,7 +204,13 @@ fun MovieHeader(movie: Movie, navController: NavController) {
  * Displays the "Play" button and watch later, favorite, and share icons.
  */
 @Composable
-fun ActionButtons() {
+fun ActionButtons(viewModel: MoviesViewModel , movie: Movie ) {
+    val favoriteMovies by viewModel.FavoriteMovies.collectAsState()
+    val watchLaterMovies by viewModel.WatchLaterMovies.collectAsState()
+
+    val isFavorite = favoriteMovies.any { it.id == movie.id }
+    val isWatchLater = watchLaterMovies.any { it.id == movie.id }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -245,7 +224,7 @@ fun ActionButtons() {
             colors = ButtonDefaults.buttonColors(containerColor = RedPlay),
             shape = RoundedCornerShape(24.dp),
             modifier = Modifier
-                .weight(1f) // Takes up available space
+                .weight(1f)
                 .height(48.dp)
         ) {
             Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = Color.White)
@@ -255,12 +234,32 @@ fun ActionButtons() {
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        // call of secondary Icon Buttons
-        ActionButton(icon = Icons.Default.FavoriteBorder, description = "Favorite")
-        ActionButton(icon = Icons.Default.AccessTime, description = "Watch Later")
-        ActionButton(icon = Icons.Default.Share, description = "Share")
+        // Favorite Button
+        ActionButton(
+            icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+            description = "Favorite"
+        ) {
+            viewModel.toggleFavorite(movie = movie)
+        }
+
+        // Watch Later Button
+        ActionButton(
+            icon = if (isWatchLater) Icons.Default.AccessTimeFilled else Icons.Default.AccessTime,
+            description = "Watch Later"
+        ) {
+            viewModel.toggleWatchLater(movie = movie)
+        }
+
+        // Share Button
+        ActionButton(
+            icon = Icons.Default.Share,
+            description = "Share"
+        ) {
+            // Function for share
+        }
     }
 }
+
 
 /**
  * SECTION: SYNOPSIS
@@ -276,7 +275,7 @@ fun SynopsisSection(synopsis: String) {
 
         )
         Box(
-                modifier = Modifier.border(1.dp, GoldAccent, RoundedCornerShape(12.dp))
+            modifier = Modifier.border(1.dp, GoldAccent, RoundedCornerShape(12.dp))
         )
 
     }
@@ -326,21 +325,21 @@ fun CastSection(cast: List<String>) {
 //        Box(modifier = Modifier.border(1.dp, GoldAccent, cardShape)
 //
 //        ){
-            SectionCard(title = "Cast") {
-                // FlowRow automatically wraps items to the next line.
-                FlowRow(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    cast.forEach { name ->
-                        CastChip(name = name)
-                    }
-                }
-
-
+    SectionCard(title = "Cast") {
+        // FlowRow automatically wraps items to the next line.
+        FlowRow(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            cast.forEach { name ->
+                CastChip(name = name)
             }
         }
+
+
+    }
+}
 
 
 /**
@@ -348,26 +347,26 @@ fun CastSection(cast: List<String>) {
  */
 @Composable
 fun InfoCardsSection(movie: Movie) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                ,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            SmallInfoCard(
-                label = "Release Date",
-                value = movie.release_date,
-                icon = Icons.Default.CalendarToday,
-                modifier = Modifier.weight(1f).padding(start = 16.dp)
-            )
-            SmallInfoCard(
-                label = "Rating",
-                value = "${movie.vote_average}/10",
-                icon = Icons.Default.StarBorder,
-                modifier = Modifier.weight(1f).padding(end= 16.dp)
-            )
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+        ,
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
+    ) {
+        SmallInfoCard(
+            label = "Release Date",
+            value = movie.release_date,
+            icon = Icons.Default.CalendarToday,
+            modifier = Modifier.weight(1f).padding(start = 16.dp)
+        )
+        SmallInfoCard(
+            label = "Rating",
+            value = "${movie.vote_average}/10",
+            icon = Icons.Default.StarBorder,
+            modifier = Modifier.weight(1f).padding(end= 16.dp)
+        )
 
-        }
+    }
 }
 
 /**
@@ -376,23 +375,23 @@ fun InfoCardsSection(movie: Movie) {
 @Composable
 fun InfoTag(text: String, icon: ImageVector? = null) {
 
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = GoldAccent,
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-            Text(
-                text = text,
-                color = GoldAccent,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = GoldAccent,
+                modifier = Modifier.size(14.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
         }
+        Text(
+            text = text,
+            color = GoldAccent,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold
+        )
+    }
 
 }
 
@@ -400,9 +399,13 @@ fun InfoTag(text: String, icon: ImageVector? = null) {
  * icon button (Heart, Clock, Share).
  */
 @Composable
-fun ActionButton(icon: ImageVector, description: String) {
+fun ActionButton(
+    icon: ImageVector,
+    description: String,
+    onClick: () -> Unit
+) {
     IconButton(
-        onClick = { /* Handle action */ },
+        onClick = onClick,
         modifier = Modifier
             .size(48.dp)
             .background(DarkCardBackground, CircleShape)
@@ -414,6 +417,7 @@ fun ActionButton(icon: ImageVector, description: String) {
         )
     }
 }
+
 
 /**
  *  card container for sections like Synopsis, Director, Cast.

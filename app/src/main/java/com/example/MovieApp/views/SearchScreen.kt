@@ -23,19 +23,18 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
-import com.example.MovieApp.viewModels.fake.FakeMoviesRepository
 
 @Composable
 fun SearchScreen(
     viewModel: MoviesViewModel,
     onBack: () -> Unit,
-    onMovieClick: () -> Unit
+    navController: NavController
 ) {
 
     // Search input state from ViewModel
@@ -140,8 +139,8 @@ fun SearchScreen(
                             }
                         } else {
                             items(movies) { movie ->
-                                Box(modifier = Modifier.clickable { onMovieClick() }) {
-                                    MovieCard(movie = movie)
+                                Box() {
+                                    MovieCard(movie = movie, navController = navController , viewModel = viewModel)
                                 }
                             }
                         }
@@ -155,10 +154,4 @@ fun SearchScreen(
     }
 }
 
-@Preview(showBackground = true, showSystemUi = true)
-@Composable
-fun PreviewSearchScreen() {
-    val fakeRepo = FakeMoviesRepository()
-    val viewModel = MoviesViewModel(fakeRepo)
-    SearchScreen(viewModel = viewModel, onBack = {}, onMovieClick = {})
-}
+

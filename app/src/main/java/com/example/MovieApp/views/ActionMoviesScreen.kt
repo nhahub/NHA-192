@@ -162,7 +162,7 @@ fun ActionMovies(viewModel: MoviesViewModel, navController: NavController) {
 
                                 is UiState.Success -> {
                                     items(actionMoviesState.data) { movie ->
-                                        MovieCard(movie = movie)
+                                        MovieCard(movie = movie , navController = navController , viewModel = viewModel)
                                     }
                                 }
 

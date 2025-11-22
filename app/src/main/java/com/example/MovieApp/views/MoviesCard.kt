@@ -127,30 +127,3 @@ fun MovieCard(
         }
     }
 }
-
-// A Preview of the MovieCard Composable
-//@Preview(showBackground = true, showSystemUi = true, backgroundColor = 0xFF101010)
-//@Composable
-//fun MovieCardPreview(){
-//    MovieCard(
-//        movie = Movie(
-//            id = 1,
-//            title = "The Shawshank Redemption",
-//            overview = "Two imprisoned men bond over a number of years...",
-//            poster_path = "/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-//            adult = false,
-//            backdrop_path = "/backdrop_dummy.jpg",
-//            genre_ids = listOf(18, 80),
-//            original_language = "en",
-//            original_title = "The Shawshank Redemption",
-//            popularity = 100.0,
-//            release_date = "1994-09-23",
-//            video = false,
-//            vote_average = 9.3,
-//            vote_count = 2000
-//        ),
-//        modifier = Modifier.padding(8.dp),
-//        navController = null,
-//        onClick = { /* Do nothing in preview */ } // 3. Pass empty lambda for preview
-//    )
-//}

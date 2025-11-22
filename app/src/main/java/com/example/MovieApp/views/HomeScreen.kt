@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -271,7 +270,7 @@ fun SectionMovies(title: String, state: UiState<List<Movie>>, navController: Nav
 
                 is UiState.Success -> {
                     items(state.data) { movie ->
-                        MovieCard(movie = movie, navController = navController, viewModel = viewModel)
+                        MovieCard(movie = movie, navController = navController , viewModel = viewModel)
                     }
                 }
 

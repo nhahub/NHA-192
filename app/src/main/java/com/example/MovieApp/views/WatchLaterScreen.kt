@@ -34,11 +34,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.MovieApp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun WatchLaterScreen(viewModel: MoviesViewModel) {
+fun WatchLaterScreen(viewModel: MoviesViewModel , navController: NavController) {
     LaunchedEffect(Unit) {
         viewModel.getWatchLaterMovies()
     }
@@ -57,6 +58,12 @@ fun WatchLaterScreen(viewModel: MoviesViewModel) {
                 contentDescription = "WatchLater Screen Background",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x80000000))
             )
 
             if(watchLaterMovies.isEmpty()) {
@@ -80,7 +87,7 @@ fun WatchLaterScreen(viewModel: MoviesViewModel) {
                         .fillMaxSize()
                 ) {
                     items(watchLaterMovies) {
-                        MovieCard(movie = it)
+                        MovieCard(movie = it , navController=navController , viewModel = viewModel)
                     }
                 }
             }

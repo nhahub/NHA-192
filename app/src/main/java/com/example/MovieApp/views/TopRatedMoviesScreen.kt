@@ -168,7 +168,7 @@ fun TopRatedMoviesScreen(viewModel: MoviesViewModel,navController: NavController
 
                     is UiState.Success -> {
                         items(TopRatedMoviesState.data) { movie ->
-                            MovieCard(movie = movie)
+                            MovieCard(movie = movie , navController = navController , viewModel = viewModel)
                         }
                     }
 

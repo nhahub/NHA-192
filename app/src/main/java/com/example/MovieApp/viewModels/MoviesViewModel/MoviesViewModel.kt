@@ -6,17 +6,20 @@ import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.dto.Movie
 import com.example.MovieApp.repo.MoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class MoviesViewModel(
+open class  MoviesViewModel(
     private val repo : MoviesRepository
 ) : ViewModel()  {
 
     // Popular Movies
     private val _popularMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
+    open val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
 
 
     fun getPopularMovies(page: Int) {
@@ -140,6 +143,19 @@ class MoviesViewModel(
         }
     }
 
+    fun toggleFavorite(movie: Movie) {
+        viewModelScope.launch {
+            movie.isFavorite = !movie.isFavorite
+            if (movie.isFavorite || movie.isWatchLater) {
+                repo.insert(movie)
+            } else {
+                repo.delete(movie)
+            }
+            // تحديث الـ list في ViewModel فورًا
+            _FavoriteMovies.value = repo.getFavoriteMovies()
+        }
+    }
+
     // WatchLater Movies
 
     private val _WatchLaterMovies = MutableStateFlow<List<Movie>>(emptyList())
@@ -150,7 +166,19 @@ class MoviesViewModel(
 
     fun getWatchLaterMovies() {
         viewModelScope.launch {
-            _FavoriteMovies.value = repo.getWatchLaterMovies()
+            _WatchLaterMovies.value = repo.getWatchLaterMovies()
+        }
+    }
+
+    fun toggleWatchLater(movie: Movie) {
+        viewModelScope.launch {
+            movie.isWatchLater = !movie.isWatchLater
+            if (movie.isFavorite || movie.isWatchLater) {
+                repo.insert(movie)
+            } else {
+                repo.delete(movie)
+            }
+            _WatchLaterMovies.value = repo.getWatchLaterMovies()
         }
     }
 

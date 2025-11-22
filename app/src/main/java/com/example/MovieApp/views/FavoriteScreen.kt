@@ -35,11 +35,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.MovieApp.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreen(viewModel: MoviesViewModel) {
+fun FavoritesScreen(viewModel: MoviesViewModel , navController: NavController) {
     LaunchedEffect(Unit) {
         viewModel.getFavoriteMovies()
     }
@@ -58,6 +59,12 @@ fun FavoritesScreen(viewModel: MoviesViewModel) {
                 contentDescription = "Sign Up Screen Background",
                 modifier = Modifier.fillMaxSize(),
                 contentScale = ContentScale.Crop
+            )
+
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x80000000))
             )
 
             if(favoriteMovies.isEmpty()) {
@@ -81,7 +88,7 @@ fun FavoritesScreen(viewModel: MoviesViewModel) {
                         .fillMaxSize()
                 ) {
                     items(favoriteMovies) {
-                        MovieCard(movie = it)
+                        MovieCard(movie = it , navController = navController , viewModel = viewModel)
                     }
                 }
             }
