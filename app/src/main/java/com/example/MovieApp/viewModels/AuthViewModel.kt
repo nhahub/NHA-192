@@ -21,6 +21,40 @@ class AuthViewModel(
     // Exposed as read-only to UI
     val signupState = _signupState.asStateFlow()
 
+    private val _email = MutableStateFlow("")
+    val email = _email.asStateFlow()
+
+    private val _name = MutableStateFlow("")
+    val name = _name.asStateFlow()
+
+    private val _phoneNumber = MutableStateFlow("")
+    val phoneNumber = _phoneNumber.asStateFlow()
+
+
+    private val _password = MutableStateFlow("")
+    val password = _password.asStateFlow()
+
+
+    fun onEmailChange(input: String) {
+        _email.value = input
+    }
+
+    fun onPasswordChange(input: String) {
+        _password.value = input
+    }
+
+    fun onNameChange(input: String) {
+        _name.value = input
+    }
+
+    fun onPhoneNumberChange(input: String) {
+        _phoneNumber.value = input
+    }
+
+
+
+    // Internal mutable state
+
     private val _signInState = MutableStateFlow<AuthResult<String>>(AuthResult.Loading)
     // Exposed as read-only to UI
     val signInState = _signInState.asStateFlow()
