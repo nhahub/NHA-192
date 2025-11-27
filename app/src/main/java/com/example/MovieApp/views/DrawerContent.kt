@@ -32,7 +32,7 @@ fun DrawerContent(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween, // عشان يزق الزرار تحت خالص
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // === الجزء العلوي (Header + Items) ===
+            // ===  (Header + Items) ===
             Column {
                 // Header
                 Row(
@@ -145,7 +145,9 @@ fun DrawerContent(navController: NavController) {
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 28.dp)
                     .fillMaxWidth(),
-                onClick = { /* Handle settings click */ },
+                onClick = {
+                    navController.navigate("Settings")
+                },
                 shape = RoundedCornerShape(16.dp),
                 contentPadding = PaddingValues(vertical = 12.dp),
                 colors = ButtonDefaults.buttonColors(
