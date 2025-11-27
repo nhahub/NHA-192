@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.magnifier
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -97,33 +98,40 @@ fun SettingsScreen(
         Scaffold(
             containerColor = Color.Transparent,
             topBar = {
-                TopAppBar(
-                    modifier = Modifier.height(100.dp),
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Grapefruit,
-                        scrolledContainerColor = Grapefruit,
-                        navigationIconContentColor = Color.White,
-                        actionIconContentColor = Color.White,
-                        titleContentColor = Color.White,
-                    ),
-                    title = {
-                        Text(
-                            "设置 Settings",
-                            modifier = Modifier.padding(vertical = 12.dp),
-                            style = Typography.headlineMedium
+                Box(
+                    modifier = Modifier.background(Grapefruit)
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(bottom = 8.dp)
+                    ) {
+                        TopAppBar(
+                            colors = TopAppBarDefaults.topAppBarColors(
+                                containerColor = Color.Transparent,
+                                scrolledContainerColor = Color.Transparent,
+                                navigationIconContentColor = Color.White,
+                                actionIconContentColor = Color.White,
+                                titleContentColor = Color.White,
+                            ),
+                            title = {
+                                Text(
+                                    "设置 Settings",
+                                    style = Typography.headlineMedium
+                                )
+                            },
+                            navigationIcon = {
+                                IconButton(
+                                    onClick = { navController.popBackStack() },
+                                    modifier = Modifier
+                                        .padding(horizontal = 16.dp)
+                                        .size(20.dp)
+                                ) {
+                                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                                }
+                            }
                         )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 24.dp)
-                                .size(20.dp)
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                        }
                     }
-                )
+                }
             }
         ) { innerPadding ->
             Column(
