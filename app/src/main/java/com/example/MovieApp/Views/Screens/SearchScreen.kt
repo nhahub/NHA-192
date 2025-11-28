@@ -21,6 +21,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,16 +41,17 @@ fun SearchScreen(
     navController: NavController
 ) {
 
+    val customFont = FontFamily(
+        Font(R.font.spellofasia)
+    )
+
     // --------Search input state from ViewModel---------
     val searchText by searchViewModel.query.collectAsState()
 
     // Collect merged and filtered movies from the view model
     val searchResultsState by searchViewModel.searchedMovie.collectAsState()
 
-    // Load popular movies when screen opens
-    LaunchedEffect(Unit) {
-        movieViewModel.getPopularMovies(1)
-    }
+        val pop = movieViewModel.popularMovies
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -111,11 +114,12 @@ fun SearchScreen(
             if (searchText.isBlank()) {
                 Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    text = "Popular movies you may like ...",
+                    text = "Search Results ...",
                     color = Color.Yellow,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(start = 8.dp)
+                    modifier = Modifier.padding(start = 8.dp),
+                    fontFamily = customFont
                 )
             }
 
@@ -131,7 +135,7 @@ fun SearchScreen(
             ) {
                 when (val state = searchResultsState) {
                     is UiState.Loading -> item {
-                        Text("Loading...", color = Color.White, modifier = Modifier.padding(16.dp))
+                        Text(text = "No searched movies yet.", color = Color.White, modifier = Modifier.padding(16.dp))
                     }
                     is UiState.Success -> {
                         val movies = state.data
