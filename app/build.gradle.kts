@@ -30,6 +30,7 @@ android {
 
         // Expose MOVIE _API_KEY to BuildConfig
         buildConfigField("String", "MOVIE_API_KEY", "\"$MOVIE_API_KEY\"")
+    }
 
         buildTypes {
             release {
@@ -52,7 +53,6 @@ android {
             buildConfig = true
         }
     }
-}
 
 dependencies {
 
