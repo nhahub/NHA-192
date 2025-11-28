@@ -13,6 +13,12 @@ class ConvertersTest {
         assertEquals("1,2,3", result)
     }
 
+    @Test
+    fun testFromList_empty() {
+        val list = emptyList<Int>()
+        val result = converters.fromList(list)
+        assertEquals("", result)
+    }
 
 
 
