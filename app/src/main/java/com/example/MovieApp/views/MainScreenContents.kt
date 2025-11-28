@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -31,7 +32,10 @@ import com.example.movie_app.MovieDetailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MoviesViewModel) {
+fun MainScreen(
+    viewModel: MoviesViewModel,
+    parentNavController: NavController
+) {
 
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -102,7 +106,8 @@ fun MainScreen(viewModel: MoviesViewModel) {
                 SettingsScreen(
                     authViewModel = authViewModel,
                     navController = navController,
-                    settingsViewModel = settingsViewModel
+                    settingsViewModel = settingsViewModel,
+                    parentNavController = parentNavController
                 )
             }
         }
