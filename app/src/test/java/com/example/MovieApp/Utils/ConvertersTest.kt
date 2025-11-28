@@ -20,6 +20,15 @@ class ConvertersTest {
         assertEquals("", result)
     }
 
+    @Test
+    fun testToList() {
+        val data = "1,2,3"
+        val result = converters.toList(data)
+        assertEquals(listOf(1, 2, 3), result)
+    }
+
+
+
 
 
 }
