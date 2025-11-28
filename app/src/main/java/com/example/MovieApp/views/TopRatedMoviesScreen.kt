@@ -51,16 +51,15 @@ import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
+fun TopRatedMoviesScreen(viewModel: MoviesViewModel,navController: NavController) {
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        viewModel.getFantasyMovies(1)
+        viewModel.getTopRatedMovies(1)
     }
-
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -71,8 +70,9 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                 DrawerContent(navController = navController)
             }
         }
-    ){
-        val FantasyMoviesState = viewModel.FantasyMovies.collectAsState().value
+    ) {
+
+        val TopRatedMoviesState = viewModel.TopRatedMovies.collectAsState().value
 
         Image(
             painter = painterResource(id = R.drawable.movies_genres_bg_2),
@@ -92,7 +92,7 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                 .fillMaxSize()
                 .padding(start = 10.dp)
         ) {
-            Column{
+            Column {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -155,15 +155,19 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
 
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                when (FantasyMoviesState) {
+                when (TopRatedMoviesState) {
                     is UiState.Loading -> {
                         item {
-                            Text("Loading...", color = Color.White, modifier = Modifier.padding(16.dp))
+                            Text(
+                                "Loading...",
+                                color = Color.White,
+                                modifier = Modifier.padding(16.dp)
+                            )
                         }
                     }
 
                     is UiState.Success -> {
-                        items(FantasyMoviesState.data) { movie ->
+                        items(TopRatedMoviesState.data) { movie ->
                             MovieCard(movie = movie , navController = navController , viewModel = viewModel)
                         }
                     }
@@ -171,7 +175,7 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                     is UiState.Error -> {
                         item {
                             Text(
-                                text = "Error: ${FantasyMoviesState.message}",
+                                text = "Error: ${TopRatedMoviesState.message}",
                                 color = Color.Red,
                                 modifier = Modifier.padding(16.dp)
                             )
@@ -179,8 +183,10 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                     }
                 }
             }
+
+
         }
     }
-
 }
+
 

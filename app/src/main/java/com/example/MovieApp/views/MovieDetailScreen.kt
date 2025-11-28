@@ -12,6 +12,8 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
@@ -21,138 +23,118 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.MovieApp.dto.Movie
+import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 
-// --- 1. DEFINE COLORS & THEME ---
-// Based on your images, we'll define a dark theme palette.
+//  **1. define colors & theme **
+
 val DarkBackground = Color(0xFF101010)
-val DarkCardBackground = Color(0xFF1E1E1E) // Slightly lighter for cards
+val DarkCardBackground = Color(0xFF1E1E1E)
 val GoldAccent = Color(0xFFF0C14B)
 val RedPlay = Color(0xFFD50000)
-val MaroonChip = Color(0xFF4A141C) // Background for cast chips
+val MaroonChip = Color(0xFF4A141C)
 val LightGrayText = Color(0xFFB0B0B0)
+val WightGrayText = Color(0xFFE7DADA)
 
-// --- 2. DEFINE DUMMY DATA ---
-// In a real app, this would come from a ViewModel or API.
-data class Movie(
-    val title: String,
-    val synopsis: String,
-    val director: String,
-    val cast: List<String>,
-    val rating: String,
-    val year: String,
-    val duration: String,
-    val posterUrl: String, // URL for the small poster
-    val backgroundUrl: String // URL for the large header image
-)
 
-val sampleMovie = Movie(
-    title = "Crouching Tiger, Hidden Dragon",
-    synopsis = "A legendary martial arts master must retrieve a stolen sword and confront her past in this visually stunning epic.",
-    director = "Ang Lee",
-    cast = listOf("Chow Yun-fat", "Michelle Yeoh", "Zhang Ziyi"),
-    rating = "9.2",
-    year = "2000",
-    duration = "120",
-    posterUrl = "https://placehold.co/400x600/202020/F0C14B?text=Poster", // Placeholder
-    backgroundUrl = "https://placehold.co/600x400/503030/FFFFFF?text=Background" // Placeholder
-)
-
-// --- 3. MAIN SCREEN COMPOSABLE ---
+// ** 3. main screen composable functions **
 /**
- * This is the main composable for the entire screen.
- * It uses a Scaffold to easily place the top back button.
+ *  Scaffold used to  place the top back button.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MovieDetailScreen() {
-    // We use a Scaffold to get a standard app layout.
-    // The topBar is transparent to float over the header.
+fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
+    // Scaffold is used to get a standard app layout.
     Scaffold(
         containerColor = DarkBackground,
-        topBar = {
-            TopAppBar(
-                title = { /* No title */ },
-                navigationIcon = {
-                    IconButton(onClick = { /* Handle back press */ }) {
-                        Icon(
-                            Icons.AutoMirrored.Filled.ArrowBack,
-                            contentDescription = "Back",
-                            tint = Color.White
-                        )
-                    }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = Color.Transparent
-                )
-            )
-        }
-    ) { paddingValues ->
-        // LazyColumn is used for a scrollable screen.
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues) // Apply padding from Scaffold
+
         ) {
-            // --- SECTION: HEADER ---
-            // The header is the first item in the list.
-            item {
-                MovieHeader(movie = sampleMovie)
-            }
+        val movie by viewModel.selectedMovie.collectAsState()  // call the selected movie to the ui screen
 
-            // --- SECTION: ACTION BUTTONS ---
-            item {
-                ActionButtons()
-            }
+        // and check if the movie is empty or not
+        if (movie != null) {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+            ) {
+                //  safe call of functions to display the movie details
 
-            // --- SECTION: SYNOPSIS ---
-            item {
-                SynopsisSection(synopsis = sampleMovie.synopsis)
-            }
+                item {
+                    MovieHeader(movie = movie!!, navController = navController)
+                }
 
-            // --- SECTION: DIRECTOR ---
-            item {
-                DirectorSection(director = sampleMovie.director)
-            }
+                item {
+                    ActionButtons(viewModel = viewModel , movie = movie!!)
+                }
 
-            // --- SECTION: CAST ---
-            item {
-                CastSection(cast = sampleMovie.cast)
-            }
+                item {
+                    SynopsisSection(synopsis = movie!!.overview)
+                }
 
-            // --- SECTION: INFO CARDS (Release & Rating) ---
-            item {
-                InfoCardsSection(movie = sampleMovie)
-            }
+                item {
+                    DirectorSection(director = "Ang Lee")
+                }
 
-            // Add some bottom padding
-            item {
-                Spacer(modifier = Modifier.height(32.dp))
+                item {
+                    CastSection(cast = listOf("Chow Yun-fat", "Michelle Yeoh", "Zhang Ziyi","John wick","Tom Cruise","Donnie Yen"))
+                }
+
+                item {
+                    InfoCardsSection(movie = movie!!)
+                }
+
+                //  spacer between bottom and cards section
+                item {
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
+            }
+        } else {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = GoldAccent)
             }
         }
+
     }
 }
 
-// --- 4. SCREEN SECTION COMPOSABLES ---
+// ** 4.screen section composables**
 
 /**
- * SECTION: HEADER
  * Displays the large background image, gradient, poster, title, and tags.
  */
 @Composable
-fun MovieHeader(movie: Movie) {
+fun MovieHeader(movie: Movie, navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(400.dp) // Fixed height for the header area
+            .height(400.dp) // Fixed height for header area
     ) {
+
         // 1. Background Image
         AsyncImage(
-            model = movie.backgroundUrl,
+            model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}", // got from the object movie from api
             contentDescription = "Movie Background",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Crop
         )
+
+        Box( modifier = Modifier
+            .size(50.dp)
+            , // Darker yellow circle
+            contentAlignment = Alignment.Center){
+            IconButton(onClick = { navController.popBackStack()}) {
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
+            }
+        }
 
         // 2. Gradient Overlay (from transparent to dark)
         Box(
@@ -166,7 +148,7 @@ fun MovieHeader(movie: Movie) {
                 )
         )
 
-        // 3. Content (Poster, Title, Info)
+        // 3. Content (Poster, Info)
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -174,14 +156,14 @@ fun MovieHeader(movie: Movie) {
                 .padding(horizontal = 16.dp, vertical = 24.dp),
             verticalAlignment = Alignment.Bottom
         ) {
-            // Poster Image
+            // 3.1 Poster Image
             Card(
                 shape = RoundedCornerShape(8.dp),
                 border = BorderStroke(2.dp, GoldAccent),
                 elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
             ) {
                 AsyncImage(
-                    model = movie.posterUrl,
+                    model = "https://image.tmdb.org/t/p/w500/${movie.poster_path}",
                     contentDescription = "Movie Poster",
                     modifier = Modifier
                         .width(120.dp)
@@ -190,9 +172,10 @@ fun MovieHeader(movie: Movie) {
                 )
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(16.dp)) //  Horiz. space between poster and info.
 
-            // Title, Tags, Duration
+
+            // 3.2 Info (Title, Tags, Duration)
             Column(verticalArrangement = Arrangement.Bottom) {
                 Text(
                     text = movie.title,
@@ -200,15 +183,15 @@ fun MovieHeader(movie: Movie) {
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(8.dp)) // Vertical space between title and tags
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    InfoTag(text = movie.rating, icon = Icons.Default.Star)
-                    InfoTag(text = movie.year)
-                    InfoTag(text = "Action") // Hardcoded from image
+                    InfoTag(text = movie.vote_average.toString(), icon = Icons.Default.Star)
+                    InfoTag(text = movie.release_date?.split("-")?.get(0) ?: "CommingSoon")
+                    InfoTag(text = "Action")
                 }
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = "${movie.duration} min",
+                    text = "120 mins",
                     color = LightGrayText,
                     style = MaterialTheme.typography.bodyMedium
                 )
@@ -218,11 +201,16 @@ fun MovieHeader(movie: Movie) {
 }
 
 /**
- * SECTION: ACTION BUTTONS
- * Displays the "Play" button and other icon buttons.
+ * Displays the "Play" button and watch later, favorite, and share icons.
  */
 @Composable
-fun ActionButtons() {
+fun ActionButtons(viewModel: MoviesViewModel , movie: Movie ) {
+    val favoriteMovies by viewModel.FavoriteMovies.collectAsState()
+    val watchLaterMovies by viewModel.WatchLaterMovies.collectAsState()
+
+    val isFavorite = favoriteMovies.any { it.id == movie.id }
+    val isWatchLater = watchLaterMovies.any { it.id == movie.id }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -230,13 +218,13 @@ fun ActionButtons() {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Play Button (Primary)
+        // Play Button
         Button(
             onClick = { /* Handle Play */ },
             colors = ButtonDefaults.buttonColors(containerColor = RedPlay),
             shape = RoundedCornerShape(24.dp),
             modifier = Modifier
-                .weight(1f) // Takes up available space
+                .weight(1f)
                 .height(48.dp)
         ) {
             Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = Color.White)
@@ -246,32 +234,54 @@ fun ActionButtons() {
 
         Spacer(modifier = Modifier.width(16.dp))
 
-        // Secondary Icon Buttons
-        ActionButton(icon = Icons.Default.FavoriteBorder, description = "Favorite")
-        ActionButton(icon = Icons.Default.AccessTime, description = "Watch Later")
-        ActionButton(icon = Icons.Default.Share, description = "Share")
+        // Favorite Button
+        ActionButton(
+            icon = if (isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+            description = "Favorite"
+        ) {
+            viewModel.toggleFavorite(movie = movie)
+        }
+
+        // Watch Later Button
+        ActionButton(
+            icon = if (isWatchLater) Icons.Default.AccessTimeFilled else Icons.Default.AccessTime,
+            description = "Watch Later"
+        ) {
+            viewModel.toggleWatchLater(movie = movie)
+        }
+
+        // Share Button
+        ActionButton(
+            icon = Icons.Default.Share,
+            description = "Share"
+        ) {
+            // Function for share
+        }
     }
 }
+
 
 /**
  * SECTION: SYNOPSIS
- * Uses the reusable SectionCard composable.
  */
 @Composable
 fun SynopsisSection(synopsis: String) {
-    SectionCard(title = "Synopsis") {
+    SectionCard(title = "Description") {
         Text(
             text = synopsis,
-            color = LightGrayText,
+            color = WightGrayText,
             style = MaterialTheme.typography.bodyMedium,
             lineHeight = 22.sp
+
         )
+        Box(
+            modifier = Modifier.border(1.dp, GoldAccent, RoundedCornerShape(12.dp))
+        )
+
     }
 }
-
 /**
  * SECTION: DIRECTOR
- * Also uses the reusable SectionCard.
  */
 @Composable
 fun DirectorSection(director: String) {
@@ -283,19 +293,19 @@ fun DirectorSection(director: String) {
                 tint = GoldAccent,
                 modifier = Modifier
                     .size(40.dp)
-                    .background(DarkCardBackground, CircleShape)
+                    .background(Color(0xFF232121), CircleShape)//////////
                     .padding(8.dp)
             )
             Spacer(modifier = Modifier.width(12.dp))
             Column {
                 Text(
                     text = "Director",
-                    color = LightGrayText,
+                    color = WightGrayText,
                     style = MaterialTheme.typography.labelMedium
                 )
                 Text(
                     text = director,
-                    color = Color.White,
+                    color = LightGrayText,
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium
                 )
@@ -311,6 +321,10 @@ fun DirectorSection(director: String) {
 @OptIn(ExperimentalLayoutApi::class) // For FlowRow
 @Composable
 fun CastSection(cast: List<String>) {
+//    val cardShape = RoundedCornerShape(16.dp)
+//        Box(modifier = Modifier.border(1.dp, GoldAccent, cardShape)
+//
+//        ){
     SectionCard(title = "Cast") {
         // FlowRow automatically wraps items to the next line.
         FlowRow(
@@ -322,78 +336,76 @@ fun CastSection(cast: List<String>) {
                 CastChip(name = name)
             }
         }
+
+
     }
 }
 
+
 /**
  * SECTION: INFO CARDS (Release Year & Rating)
- * A Row of two SmallInfoCard composables.
  */
 @Composable
 fun InfoCardsSection(movie: Movie) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp),
+        ,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         SmallInfoCard(
-            label = "Release Year",
-            value = movie.year,
+            label = "Release Date",
+            value = movie.release_date,
             icon = Icons.Default.CalendarToday,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).padding(start = 16.dp)
         )
         SmallInfoCard(
             label = "Rating",
-            value = "${movie.rating}/10",
+            value = "${movie.vote_average}/10",
             icon = Icons.Default.StarBorder,
-            modifier = Modifier.weight(1f)
+            modifier = Modifier.weight(1f).padding(end= 16.dp)
         )
+
     }
 }
 
-
-// --- 5. REUSABLE HELPER COMPOSABLES ---
-// These helpers keep the code clean and readable (DRY principle).
-
 /**
- * A small tag for info like rating, year, genre.
+ * A small tag for info like (rating, year).
  */
 @Composable
 fun InfoTag(text: String, icon: ImageVector? = null) {
-    Box(
-        modifier = Modifier
-            .padding(end = 8.dp) // Space between tags
-            .background(Color.DarkGray.copy(alpha = 0.5f), RoundedCornerShape(4.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp)
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (icon != null) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = GoldAccent,
-                    modifier = Modifier.size(14.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-            }
-            Text(
-                text = text,
-                color = GoldAccent,
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Bold
+
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (icon != null) {
+            Icon(
+                imageVector = icon,
+                contentDescription = null,
+                tint = GoldAccent,
+                modifier = Modifier.size(14.dp)
             )
+            Spacer(modifier = Modifier.width(4.dp))
         }
+        Text(
+            text = text,
+            color = GoldAccent,
+            style = MaterialTheme.typography.labelMedium,
+            fontWeight = FontWeight.Bold
+        )
     }
+
 }
 
 /**
- * A single circular icon button (Heart, Clock, Share).
+ * icon button (Heart, Clock, Share).
  */
 @Composable
-fun ActionButton(icon: ImageVector, description: String) {
+fun ActionButton(
+    icon: ImageVector,
+    description: String,
+    onClick: () -> Unit
+) {
     IconButton(
-        onClick = { /* Handle action */ },
+        onClick = onClick,
         modifier = Modifier
             .size(48.dp)
             .background(DarkCardBackground, CircleShape)
@@ -406,9 +418,9 @@ fun ActionButton(icon: ImageVector, description: String) {
     }
 }
 
+
 /**
- * A reusable card container for sections like Synopsis, Director, Cast.
- * It provides the title with the yellow accent bar.
+ *  card container for sections like Synopsis, Director, Cast.
  */
 @Composable
 fun SectionCard(
@@ -419,8 +431,9 @@ fun SectionCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
-            .background(DarkCardBackground, RoundedCornerShape(12.dp))
+            .background(Color(0xFF232121), RoundedCornerShape(12.dp))
             .padding(16.dp)
+
     ) {
         // Title with yellow accent bar
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -444,7 +457,7 @@ fun SectionCard(
 }
 
 /**
- * A small card for displaying a single piece of info, like Release Year.
+ *  card for displaying info like Release Year.
  */
 @Composable
 fun SmallInfoCard(

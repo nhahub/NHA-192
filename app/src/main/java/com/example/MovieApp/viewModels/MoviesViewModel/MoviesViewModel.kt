@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-open class MoviesViewModel(
+open class  MoviesViewModel(
     private val repo : MoviesRepository
 ) : ViewModel()  {
 
@@ -129,6 +129,7 @@ open class MoviesViewModel(
         }
     }
 
+
     // Favorite Movies
 
     private val _FavoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
@@ -138,6 +139,19 @@ open class MoviesViewModel(
     // for getting the favorite movies from the database
     fun getFavoriteMovies() {
         viewModelScope.launch {
+            _FavoriteMovies.value = repo.getFavoriteMovies()
+        }
+    }
+
+    fun toggleFavorite(movie: Movie) {
+        viewModelScope.launch {
+            movie.isFavorite = !movie.isFavorite
+            if (movie.isFavorite || movie.isWatchLater) {
+                repo.insert(movie)
+            } else {
+                repo.delete(movie)
+            }
+            // تحديث الـ list في ViewModel فورًا
             _FavoriteMovies.value = repo.getFavoriteMovies()
         }
     }
@@ -152,7 +166,19 @@ open class MoviesViewModel(
 
     fun getWatchLaterMovies() {
         viewModelScope.launch {
-            _FavoriteMovies.value = repo.getWatchLaterMovies()
+            _WatchLaterMovies.value = repo.getWatchLaterMovies()
+        }
+    }
+
+    fun toggleWatchLater(movie: Movie) {
+        viewModelScope.launch {
+            movie.isWatchLater = !movie.isWatchLater
+            if (movie.isFavorite || movie.isWatchLater) {
+                repo.insert(movie)
+            } else {
+                repo.delete(movie)
+            }
+            _WatchLaterMovies.value = repo.getWatchLaterMovies()
         }
     }
 
@@ -198,9 +224,9 @@ open class MoviesViewModel(
         _popularMovies,
         _mergedGenreMovies
     ) { text, popularState, genreMovies ->
-        
+
         if (text.isBlank()) {
-             // Return popular movies if search text is empty
+            // Return popular movies if search text is empty
             popularState
         } else {
             // Filter locally
@@ -218,12 +244,20 @@ open class MoviesViewModel(
     fun onSearchTextChange(text: String) {
         _searchText.value = text
     }
-    
+
     // Helper to trigger loading of all sections needed for search
     fun loadAllSectionMovies() {
         if (_ActionMovies.value !is UiState.Success) getActionMovies(1)
         if (_AdventureMovies.value !is UiState.Success) getAdventureMovies(1)
         if (_ComedyMovies.value !is UiState.Success) getComedyMovies(1)
         if (_FantasyMovies.value !is UiState.Success) getFantasyMovies(1)
+    }
+
+    private val _selectedMovie = MutableStateFlow<Movie?>(null)
+    val selectedMovie: StateFlow<Movie?> = _selectedMovie.asStateFlow()
+
+    // Function to SET the movie (call this when user clicks a card)
+    fun setSelectedMovie(movie: Movie) {
+        _selectedMovie.value = movie
     }
 }

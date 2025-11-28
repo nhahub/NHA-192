@@ -18,7 +18,6 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalTextStyle
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
@@ -215,19 +214,25 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
                         // Popular Movies
                         SectionMovies(
                             title = "热门电影 • Popular Movies",
-                            state = popularMoviesState
+                            state = popularMoviesState,
+                            navController = navController,
+                            viewModel = viewModel
                         )
 
                         // Top Rated
                         SectionMovies(
                             title = "趋势影片 • Top Rated Movies",
-                            state = topRatedMoviesState
+                            state = topRatedMoviesState,
+                            navController = navController,
+                            viewModel = viewModel
                         )
 
                         // Upcoming
                         SectionMovies(
                             title = "即将上映 • UpComing Movies",
-                            state = upComingMoviesState
+                            state = upComingMoviesState,
+                            navController = navController,
+                            viewModel = viewModel
                         )
 
                     }
@@ -238,7 +243,7 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
 }
 
 @Composable
-fun SectionMovies(title: String, state: UiState<List<Movie>>) {
+fun SectionMovies(title: String, state: UiState<List<Movie>>, navController: NavController, viewModel: MoviesViewModel) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
@@ -265,7 +270,7 @@ fun SectionMovies(title: String, state: UiState<List<Movie>>) {
 
                 is UiState.Success -> {
                     items(state.data) { movie ->
-                        MovieCard(movie = movie)
+                        MovieCard(movie = movie, navController = navController , viewModel = viewModel)
                     }
                 }
 

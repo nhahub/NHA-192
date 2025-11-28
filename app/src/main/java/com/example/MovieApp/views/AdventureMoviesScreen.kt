@@ -51,7 +51,7 @@ import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController){
+fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController) {
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -70,38 +70,42 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController){
                 DrawerContent(navController = navController)
             }
         }
-    ){
+    ) {
 
-    val AdvatureMoviesState = viewModel.AdventureMovies.collectAsState().value
+        val adventureMoviesState = viewModel.AdventureMovies.collectAsState().value
 
-        Image(
-            painter = painterResource(id = R.drawable.movies_genres_bg_2),
-            contentDescription = "Sign Up Screen Background",
-            modifier = Modifier.fillMaxSize(),
-            contentScale = ContentScale.Crop
-        )
+        Box(modifier = Modifier.fillMaxSize()) {
 
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(Color(0x80000000)) // أسود شفاف (50%)
-        )
+            Image(
+                painter = painterResource(id = R.drawable.movies_genres_bg_2),
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
 
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(start = 10.dp)
-        ){
-            Column{
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color(0x80000000))
+            )
+
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(start = 10.dp)
+            ) {
+
+                // Search Bar
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
                         .clickable { navController.navigate("search") }
                 ) {
-                    IconButton(onClick = {
-                        scope.launch { drawerState.open() }
-                    }) {
+
+                    IconButton(
+                        onClick = { scope.launch { drawerState.open() } }
+                    ) {
                         Icon(
                             Icons.Default.Menu,
                             contentDescription = "Menu",
@@ -124,63 +128,55 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController){
                             )
                         },
                         placeholder = {
-                            Text(
-                                "Search..",
-                                color = Color(0xFFBDBDBD)
-                            )
+                            Text("Search..", color = Color(0xFFBDBDBD))
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
                         shape = RoundedCornerShape(16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
                             disabledBorderColor = Color(0xFFFFD54F),
                             disabledTextColor = Color(0xFFE0E0E0),
                             cursorColor = Color(0xFFFFEB3B)
-
                         )
                     )
                 }
-            }
 
-            LazyVerticalGrid(
+                // Movies Grid
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
 
-                columns = GridCells.Fixed(2),
-
-
-                contentPadding = PaddingValues(8.dp),
-
-
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-
-
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                when (AdvatureMoviesState) {
-                    is UiState.Loading -> {
-                        item {
-                            Text("Loading...", color = Color.White, modifier = Modifier.padding(16.dp))
+                    when (adventureMoviesState) {
+                        is UiState.Loading -> {
+                            item {
+                                Text("Loading...", color = Color.White, modifier = Modifier.padding(16.dp))
+                            }
                         }
-                    }
 
-                    is UiState.Success -> {
-                        items(AdvatureMoviesState.data) { movie ->
-                            MovieCard(movie = movie)
+                        is UiState.Success -> {
+                            items(adventureMoviesState.data) { movie ->
+                                MovieCard(
+                                    movie = movie , navController = navController , viewModel = viewModel
+                                )
+                            }
                         }
-                    }
 
-                    is UiState.Error -> {
-                        item {
-                            Text(
-                                text = "Error: ${AdvatureMoviesState.message}",
-                                color = Color.Red,
-                                modifier = Modifier.padding(16.dp)
-                            )
+                        is UiState.Error -> {
+                            item {
+                                Text(
+                                    text = "Error: ${adventureMoviesState.message}",
+                                    color = Color.Red,
+                                    modifier = Modifier.padding(16.dp)
+                                )
+                            }
                         }
                     }
                 }
-             }
-
-
+            }
         }
     }
 }

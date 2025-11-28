@@ -92,10 +92,10 @@ class SplashingScreen : ComponentActivity() {
             SplashScreenTheme {
                 NavHost(
                     navController = navController,
-                    startDestination = "main_screen"
+                    startDestination = "splash_screen"
                 ) {
                     composable("splash_screen") {
-                        SplashingScreen(viewModel = viewModel, navController = navController)
+                        SplashingScreen(viewModel = viewModel, navController = navController, authViewModel = authViewModel)
                     }
                     composable("auth_screen") {
                         AuthScreen(navController = navController)
@@ -109,11 +109,6 @@ class SplashingScreen : ComponentActivity() {
                     composable("sign_in_screen") {
                         SignInScreen(
                             authViewModel = authViewModel,
-                            navController = navController
-                        )
-                    }
-                    composable("settings_button_screen") {
-                        SettingsButton(
                             navController = navController
                         )
                     }
@@ -132,14 +127,40 @@ class SplashingScreen : ComponentActivity() {
 @Composable
 fun SplashingScreen(
     viewModel: MoviesViewModel,
-    navController: NavController
+    navController: NavController,
+    authViewModel: AuthViewModel
 ) {
     // first i instantiate the ui state by collecting the state flow from view model
-    val uiState by viewModel.popularMovies.collectAsStateWithLifecycle()
+    val popularMoviesState by viewModel.popularMovies.collectAsStateWithLifecycle()
+    val topRatedMoviesState by viewModel.TopRatedMovies.collectAsStateWithLifecycle()
+    val upcomingMoviesState by viewModel.UpComingMovies.collectAsStateWithLifecycle()
+
     // then i call the get popular movies function to fetch data from api which will make the data
     // ready for the user before entering the main screen
     // those popular movies will be stored in the database
-    viewModel.getPopularMovies(1)
+    LaunchedEffect(Unit) {
+        viewModel.getPopularMovies(1)
+        viewModel.getTopRatedMovies(1)
+        viewModel.getUpComingMovies(1)
+    }
+
+    // Define the Combined UI State based on the individual state
+    val combinedUiState = remember(popularMoviesState, topRatedMoviesState, upcomingMoviesState) {
+        when {
+            // Priority 1: Any Error? -> Show Error
+            popularMoviesState is UiState.Error -> popularMoviesState
+            topRatedMoviesState is UiState.Error -> topRatedMoviesState
+            upcomingMoviesState is UiState.Error -> upcomingMoviesState
+
+            // Priority 2: All Success? -> Show Success
+            popularMoviesState is UiState.Success &&
+                    topRatedMoviesState is UiState.Success &&
+                    upcomingMoviesState is UiState.Success -> UiState.Success(emptyList()) // مش محتاجين الداتا هنا أوي قد ما محتاجين الحالة
+
+            // Priority 3: Else -> Loading
+            else -> UiState.Loading
+        }
+    }
     // i made a box to make an overlay screen over the background image
     Box(
         modifier = Modifier.fillMaxSize()
@@ -155,8 +176,8 @@ fun SplashingScreen(
         var showButton by remember { mutableStateOf(false) }
 
         // When uiState is Success, launch a coroutine to delay showing the button
-        LaunchedEffect(uiState) {
-            if (uiState is UiState.Success) {
+        LaunchedEffect(combinedUiState) {
+            if (combinedUiState is UiState.Success) {
                 delay(2000) // delay 1 second
                 showButton = true
             }
@@ -165,7 +186,7 @@ fun SplashingScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0x80000000)) // أسود شفاف (50%)
+                .background(Color(0x80000000))
         )
 
         // Content overlay
@@ -190,7 +211,7 @@ fun SplashingScreen(
                 color = Color.White
             )
             when{
-                (uiState is UiState.Loading && showButton== false) || (uiState is UiState.Success && showButton==false) -> {
+                (combinedUiState is UiState.Loading && !showButton) || (combinedUiState is UiState.Success && !showButton) -> {
                     CircularProgressIndicator(
                         color = Color.White,
                     modifier = Modifier.padding(8.dp)
@@ -201,11 +222,15 @@ fun SplashingScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                 }
-                uiState is UiState.Success && showButton -> {
+                combinedUiState is UiState.Success -> {
                     Button(
                         onClick = {
-                            navController.navigate("auth_screen") {
-                                popUpTo("splash_screen") { inclusive = true }
+                            if (authViewModel.isLoginedIn()) {
+                                navController.navigate("main_screen"){
+                                    popUpTo("splash_screen") { inclusive = true }
+                                }
+                            } else {
+                                navController.navigate("auth_screen")
                             }
                         },
                         shape = RoundedCornerShape(28.dp), // Large rounded corners for the pill shape
@@ -222,8 +247,8 @@ fun SplashingScreen(
                         Text(text = "Continue")
                     }
                 }
-                uiState is UiState.Error  -> {
-                    Text(text = "Error: ${(uiState as UiState.Error).message}")
+                combinedUiState is UiState.Error  -> {
+                    Text(text = "Error: ${combinedUiState.message}")
                 }
             }
         }
@@ -238,5 +263,10 @@ fun SplashScreenPreview() {
         repo = MoviesRepositoryImpl(RemoteDataSourceImpl(), LocalDataSourceImpl(LocalContext.current))
     ).create(MoviesViewModel::class.java)
 
-    SplashingScreen(viewModel = fakeViewModel , navController = NavController(LocalContext.current))
+    val fakeauthViewModel = AuthViewModelFactory(
+        repo = EmailPasswordAuthManagerRepository()
+    ).create(AuthViewModel::class.java)
+
+
+    SplashingScreen(viewModel = fakeViewModel , navController = NavController(LocalContext.current), authViewModel = fakeauthViewModel)
 }

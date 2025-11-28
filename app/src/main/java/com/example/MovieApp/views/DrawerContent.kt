@@ -6,11 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Call // (1) Import Call
 import androidx.compose.material.icons.filled.Movie
-import androidx.compose.material.icons.outlined.Settings // (2) Import Settings Outlined
+import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material3.*
-import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -34,7 +32,7 @@ fun DrawerContent(navController: NavController) {
             verticalArrangement = Arrangement.SpaceBetween, // عشان يزق الزرار تحت خالص
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // === الجزء العلوي (Header + Items) ===
+            // ===  (Header + Items) ===
             Column {
                 // Header
                 Row(
@@ -126,14 +124,30 @@ fun DrawerContent(navController: NavController) {
                     },
                     onClick = { navController.navigate("Fantasy") }
                 )
+
+                // TopRated Movies in drawer
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = 12.dp), // تظبيط المسافات
+                    label = { Text("TopRated Movies") },
+                    selected = false,
+                    icon = {
+                        // (4) استخدمنا Filled.Call بعد ما عملنا Import
+                        Icon(Icons.Filled.Movie, contentDescription = null)
+                    },
+                    onClick = { navController.navigate("TopRated") }
+                )
             }
+
+
 
             // === الجزء السفلي (Settings Button) ===
             Button(
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 28.dp)
                     .fillMaxWidth(),
-                onClick = { /* Handle settings click */ },
+                onClick = {
+                    navController.navigate("Settings")
+                },
                 shape = RoundedCornerShape(16.dp),
                 contentPadding = PaddingValues(vertical = 12.dp),
                 colors = ButtonDefaults.buttonColors(

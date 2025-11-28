@@ -6,7 +6,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -17,15 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -35,8 +36,6 @@ import com.example.MovieApp.auth.AuthResult
 import com.example.MovieApp.viewModels.AuthViewModel
 import kotlinx.coroutines.delay
 
-
-// sign up screen composable function
 @Composable
 fun SignUpScreen(
     authViewModel: AuthViewModel,
@@ -44,19 +43,20 @@ fun SignUpScreen(
 ) {
 
     val signUpstate by authViewModel.signupState.collectAsStateWithLifecycle()
-    var name by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var phoneNumber by remember { mutableStateOf("") }
 
-    var pressed by remember { mutableStateOf(false) }
+    // Getting values from ViewModel to ensure state is updated
+    val email by authViewModel.email.collectAsStateWithLifecycle()
+    val password by authViewModel.password.collectAsStateWithLifecycle()
+    val name by authViewModel.name.collectAsStateWithLifecycle()
+    val phoneNumber by authViewModel.phoneNumber.collectAsStateWithLifecycle()
 
+    // Navigating on Success
     LaunchedEffect(signUpstate) {
         if(signUpstate is AuthResult.Success<String>){
             delay(1000)
             navController.popBackStack()
             navController.navigate("main_screen") {
-                popUpTo("sign_in_screen") { inclusive = true }
+                popUpTo("sign_up_screen") { inclusive = true }
             }
         }
     }
@@ -75,7 +75,7 @@ fun SignUpScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0x80000000)) // أسود شفاف (50%)
+                .background(Color(0x80000000))
         )
 
         Column(
@@ -90,10 +90,10 @@ fun SignUpScreen(
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
-            // name
+            // Name
             OutlinedTextField(
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = { authViewModel.onNameChange(it) },
                 label = { Text("Name", color = Color.White) },
                 modifier = Modifier.padding(bottom = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -101,13 +101,14 @@ fun SignUpScreen(
                     unfocusedBorderColor = Color.LightGray,
                     focusedLabelColor = Color.White,
                     cursorColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
-            // email
+            // Email
             OutlinedTextField(
                 value = email,
-                onValueChange = { email = it },
+                onValueChange = { authViewModel.onEmailChange(it) },
                 label = { Text("Email", color = Color.White) },
                 modifier = Modifier.padding(bottom = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -115,13 +116,14 @@ fun SignUpScreen(
                     unfocusedBorderColor = Color.LightGray,
                     focusedLabelColor = Color.White,
                     cursorColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
-            // password
+            // Password
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { authViewModel.onPasswordChange(it) },
                 label = { Text("Password", color = Color.White) },
                 modifier = Modifier.padding(bottom = 16.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -129,13 +131,14 @@ fun SignUpScreen(
                     unfocusedBorderColor = Color.LightGray,
                     focusedLabelColor = Color.White,
                     cursorColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
-            // phone number
+            // Phone Number
             OutlinedTextField(
                 value = phoneNumber,
-                onValueChange = { phoneNumber = it },
+                onValueChange = { authViewModel.onPhoneNumberChange(it) },
                 label = { Text("Phone Number", color = Color.White) },
                 modifier = Modifier.padding(bottom = 24.dp),
                 colors = OutlinedTextFieldDefaults.colors(
@@ -143,45 +146,77 @@ fun SignUpScreen(
                     unfocusedBorderColor = Color.LightGray,
                     focusedLabelColor = Color.White,
                     cursorColor = Color.White,
-                    focusedTextColor = Color.White
+                    focusedTextColor = Color.White,
+                    unfocusedTextColor = Color.White
                 )
             )
-            Button(
-                onClick = { authViewModel.SignUp(email, password, name, phoneNumber) },
-                shape = RoundedCornerShape(24.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color(0xFF334455),
-                    contentColor = Color.White
-                ),
-                border = BorderStroke(1.dp, Color(0x66FFFFFF)),
-                elevation = ButtonDefaults.buttonElevation(
-                    defaultElevation = 6.dp,
-                    pressedElevation = 2.dp
-                )
+
+            // Row for Buttons (Back + Sign Up)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
-                if(pressed){
-                    when(signUpstate){
-                        is AuthResult.Success<String> -> {
-                            Text(
-                                text = "Signed Up successfully",
-                                color = Color.Green
-                            )
-                        }
-                        is AuthResult.Error ->{
-                            Text(
-                                text = (signUpstate as AuthResult.Error).message + "Try again",
-                                color = Color.Red
-                            )
-                        }
-                        is AuthResult.Loading ->{
-                            Text(
-                                text = "Signing You Up..."
-                            )
-                        }
-                    }
-                }else{
+                // 1. Back Button
+                Button(
+                    onClick = {
+                        navController.popBackStack()
+                    },
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp, Color(0x66FFFFFF)),
+                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
+                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                ) {
+                    Text("Back")
+                }
+
+                // 2. Sign Up Button
+                Button(
+                    onClick = {
+                        authViewModel.SignUp(email, password, name, phoneNumber)
+                    },
+                    shape = RoundedCornerShape(24.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color(0xFFD2B48C),
+                        contentColor = Color.White
+                    ),
+                    border = BorderStroke(1.dp, Color(0x66FFFFFF)),
+                    elevation = ButtonDefaults.buttonElevation(
+                        defaultElevation = 6.dp,
+                        pressedElevation = 2.dp
+                    ),
+                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                ) {
                     Text("Sign up")
                 }
+            }
+
+            // Error Message Display
+            if (signUpstate is AuthResult.Error) {
+                Spacer(modifier = Modifier.padding(top = 16.dp))
+                Text(
+                    text = (signUpstate as AuthResult.Error).message + "\nTry again",
+                    color = Color.Red,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .background(Color(0x33000000), shape = RoundedCornerShape(8.dp))
+                        .padding(8.dp)
+                )
+            }
+
+            // Success Message
+            if (signUpstate is AuthResult.Success<String>) {
+                Spacer(modifier = Modifier.padding(top = 16.dp))
+                Text(
+                    text = "Account Created Successfully!",
+                    color = Color.Green,
+                    fontWeight = FontWeight.Bold
+                )
             }
         }
     }
