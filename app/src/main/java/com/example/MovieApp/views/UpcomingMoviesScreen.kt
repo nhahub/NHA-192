@@ -51,7 +51,7 @@ import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
 import kotlinx.coroutines.launch
 
 @Composable
-fun UpcomimgMovies(viewModel: MoviesViewModel, navController: NavController){
+fun UpcomingMovies(viewModel: MoviesViewModel, navController: NavController){
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
