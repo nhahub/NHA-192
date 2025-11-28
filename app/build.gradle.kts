@@ -80,6 +80,7 @@ dependencies {
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)
     testImplementation(libs.junit.junit)
+    testImplementation(libs.junit.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -117,9 +118,7 @@ dependencies {
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.10.2")
     testImplementation("org.mockito:mockito-core:5.20.0")
     testImplementation("org.mockito.kotlin:mockito-kotlin:6.1.0")
-    testImplementation("io.mockk:mockk:1.14.5")
+    testImplementation("io.mockk:mockk:1.14.6")
 
-    //Room
-    // optional - Test helpers
-    //testImplementation("androidx.room:room-testing:2.8.4")
+
 }
