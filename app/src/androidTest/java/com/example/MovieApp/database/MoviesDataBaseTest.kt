@@ -12,13 +12,12 @@ class MoviesDataBaseTest {
 
     @Before
     fun setUp() {
-        TODO("Not yet implemented")
 
     }
 
     @After
     fun tearDown() {
-        TODO("Not yet implemented")
+
     }
 
 }
