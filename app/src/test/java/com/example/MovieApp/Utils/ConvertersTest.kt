@@ -27,6 +27,12 @@ class ConvertersTest {
         assertEquals(listOf(1, 2, 3), result)
     }
 
+    @Test
+    fun testToList_empty() {
+        val data = ""
+        val result = converters.toList(data)
+        assertEquals(emptyList<Int>(), result)
+    }
 
 
 
