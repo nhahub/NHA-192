@@ -114,7 +114,8 @@ class SplashingScreen : ComponentActivity() {
                     }
                     composable("main_screen") {
                         MainScreen(
-                            viewModel = viewModel
+                            viewModel = viewModel,
+                            parentNavController = navController
                         )
                     }
                 }
