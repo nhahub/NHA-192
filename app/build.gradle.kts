@@ -85,4 +85,10 @@ dependencies {
 
     // Icons dependency
     implementation(libs.material.icons.extended)
+
+    //System UI Controller
+//    implementation(libs.google.accompanist.systemuicontroller)
 }
+
+
+

@@ -129,7 +129,7 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
     }
 }
 
-// ** 4.screen section composables**
+// ** 4.screen section composable function**
 
 /**
  * Displays the large background image, gradient, poster, title, and tags.

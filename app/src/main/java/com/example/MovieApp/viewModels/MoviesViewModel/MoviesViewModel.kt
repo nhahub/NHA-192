@@ -12,11 +12,11 @@ import kotlinx.coroutines.launch
 
 class MoviesViewModel(
     private val repo : MoviesRepository
-) : ViewModel()  {
+) : ViewModel() {
 
     // Popular Movies
     private val _popularMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
+    val popularMovies: StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
 
 
     fun getPopularMovies(page: Int) {
@@ -32,7 +32,7 @@ class MoviesViewModel(
     // Upcoming Movies
     private val _UpComingMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val UpComingMovies : StateFlow<UiState<List<Movie>>> = _UpComingMovies.asStateFlow()
+    val UpComingMovies: StateFlow<UiState<List<Movie>>> = _UpComingMovies.asStateFlow()
 
     fun getUpComingMovies(page: Int) {
         viewModelScope.launch {
@@ -49,7 +49,7 @@ class MoviesViewModel(
 
     private val _TopRatedMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val TopRatedMovies : StateFlow<UiState<List<Movie>>> = _TopRatedMovies.asStateFlow()
+    val TopRatedMovies: StateFlow<UiState<List<Movie>>> = _TopRatedMovies.asStateFlow()
 
     fun getTopRatedMovies(page: Int) {
         viewModelScope.launch {
@@ -66,11 +66,11 @@ class MoviesViewModel(
 
     private val _ActionMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val ActionMovies : StateFlow<UiState<List<Movie>>> = _ActionMovies.asStateFlow()
+    val ActionMovies: StateFlow<UiState<List<Movie>>> = _ActionMovies.asStateFlow()
 
-    fun getActionMovies(page: Int ) {
+    fun getActionMovies(page: Int) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page , genreId = 28)) {
+            when (val response = repo.getMoviesByGenre(page = page, genreId = 28)) {
                 is UiState.Success -> _ActionMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _ActionMovies.value = UiState.Error(response.message)
                 else -> _ActionMovies.value = UiState.Loading
@@ -82,11 +82,11 @@ class MoviesViewModel(
 
     private val _AdventureMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val AdventureMovies : StateFlow<UiState<List<Movie>>> = _AdventureMovies.asStateFlow()
+    val AdventureMovies: StateFlow<UiState<List<Movie>>> = _AdventureMovies.asStateFlow()
 
-    fun getAdventureMovies(page: Int ) {
+    fun getAdventureMovies(page: Int) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page , genreId = 12)) {
+            when (val response = repo.getMoviesByGenre(page = page, genreId = 12)) {
                 is UiState.Success -> _AdventureMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _AdventureMovies.value = UiState.Error(response.message)
                 else -> _AdventureMovies.value = UiState.Loading
@@ -98,11 +98,11 @@ class MoviesViewModel(
 
     private val _ComedyMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val ComedyMovies : StateFlow<UiState<List<Movie>>> = _ComedyMovies.asStateFlow()
+    val ComedyMovies: StateFlow<UiState<List<Movie>>> = _ComedyMovies.asStateFlow()
 
-    fun getComedyMovies(page: Int ) {
+    fun getComedyMovies(page: Int) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page , genreId = 35)) {
+            when (val response = repo.getMoviesByGenre(page = page, genreId = 35)) {
                 is UiState.Success -> _ComedyMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _ComedyMovies.value = UiState.Error(response.message)
                 else -> _ComedyMovies.value = UiState.Loading
@@ -114,11 +114,11 @@ class MoviesViewModel(
 
     private val _FantasyMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val FantasyMovies : StateFlow<UiState<List<Movie>>> = _FantasyMovies.asStateFlow()
+    val FantasyMovies: StateFlow<UiState<List<Movie>>> = _FantasyMovies.asStateFlow()
 
-    fun getFantasyMovies(page: Int ) {
+    fun getFantasyMovies(page: Int) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page , genreId = 14)) {
+            when (val response = repo.getMoviesByGenre(page = page, genreId = 14)) {
                 is UiState.Success -> _FantasyMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _FantasyMovies.value = UiState.Error(response.message)
                 else -> _FantasyMovies.value = UiState.Loading
