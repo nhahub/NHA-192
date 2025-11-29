@@ -306,7 +306,7 @@ fun SynopsisSection(synopsis: String) {
  * SECTION: DIRECTOR
  */
 @Composable
-fun DirectorSection(director: String) {
+fun DirectorSection(director: String?) {
     SectionCard(title = "Director") {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(
@@ -325,12 +325,21 @@ fun DirectorSection(director: String) {
                     color = WightGrayText,
                     style = MaterialTheme.typography.labelMedium
                 )
-                Text(
-                    text = director,
-                    color = LightGrayText,
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.Medium
-                )
+                if (director != null) {
+                    Text(
+                        text = director,
+                        color = LightGrayText,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                }else{
+                    Text(
+                        text = "Director Not Found",
+                        color = LightGrayText,
+                        style = MaterialTheme.typography.bodyLarge,
+                        fontWeight = FontWeight.Medium
+                    )
+                }
             }
         }
     }

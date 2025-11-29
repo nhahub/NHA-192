@@ -74,7 +74,7 @@ fun AuthScreen(
                     },
                     shape = RoundedCornerShape(24.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF334455),
+                        containerColor = Color(0xFFD2B48C),
                         contentColor = Color.White
                     ),
                     border = BorderStroke(1.dp, Color(0x66FFFFFF)),
@@ -92,7 +92,7 @@ fun AuthScreen(
                     },
                     shape = RoundedCornerShape(24.dp),
                     colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF334455),
+                        containerColor = Color(0xFFD2B48C),
                         contentColor = Color.White
                     ),
                     border = BorderStroke(1.dp, Color(0x66FFFFFF)),

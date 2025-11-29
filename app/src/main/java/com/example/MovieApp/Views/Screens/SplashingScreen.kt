@@ -63,6 +63,8 @@ import com.example.MovieApp.ui.themes.SplashScreenTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.text.style.TextAlign
+
 class SplashingScreen : ComponentActivity() {
     val customFont = FontFamily(Font(R.font.spellofasia))
 
@@ -261,7 +263,7 @@ fun SplashingScreen(
                         },
                         shape = RoundedCornerShape(28.dp), // Large rounded corners for the pill shape
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = Color(0xFF334455), // The dark, moody background
+                            containerColor = Color(0xFFD2B48C), // The Creamy background
                             contentColor = Color.White // White text color
                         ),
                         border = BorderStroke(1.dp, Color(0x66FFFFFF)), // The light, shiny outline
@@ -274,10 +276,16 @@ fun SplashingScreen(
                     }
                 }
                 combinedUiState is UiState.Error -> {
-                    Text(
-                        text = "Error: ${combinedUiState.message}. Please try again",
-                        color = Color.White
-                    )
+                    Box(
+                        modifier = Modifier.padding(8.dp),
+                        contentAlignment = Alignment.Center
+                    ){
+                        Text(
+                            text = "Error: ${combinedUiState.message}. Please try again",
+                            color = Color(0xFFFF6D6D),
+                            textAlign = TextAlign.Center
+                        )
+                    }
 
                     Button(
                         onClick = {
@@ -287,9 +295,21 @@ fun SplashingScreen(
                                 viewModel.getTopRatedMovies(1)
                                 viewModel.getUpComingMovies(1)
                             }
-                        }
+                        },
+                        shape = RoundedCornerShape(24.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = Color(0xFFD2B48C),
+                            contentColor = Color.White
+                        ),
+                        border = BorderStroke(1.dp, Color(0x66FFFFFF)),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 6.dp,
+                            pressedElevation = 2.dp
+                        ),
+                        modifier = Modifier
+                            .padding(start = 8.dp)
                     ) {
-                        Text(text = "Try Again")
+                        Text("Try Again")
                     }
                 }
             }
