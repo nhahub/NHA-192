@@ -90,10 +90,9 @@ fun SettingsScreen(
             onDismissRequest = { openSignOutDialog.value = false },
             onConfirmSignOut = {
                 authViewModel.signOut()
-                parentNavController.popBackStack()
-//                parentNavController.navigate("splash_screen") {
-//                    parentNavController.popUpTo("settings") { inclusive = true }
-//                }
+                parentNavController.navigate("splash_screen") {
+                    popUpTo(0) { inclusive = true }
+                }
             }
         )
     }
