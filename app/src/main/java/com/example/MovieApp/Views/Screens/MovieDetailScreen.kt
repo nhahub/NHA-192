@@ -5,6 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,7 +29,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.MovieApp.Dto.Cast
+import com.example.MovieApp.Dto.CreditsResponse
 import com.example.MovieApp.Dto.Movie
+import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
 
 //  **1. define colors & theme **
@@ -48,25 +52,26 @@ val WightGrayText = Color(0xFFE7DADA)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
-    val movie by viewModel.selectedMovie.collectAsState()  // call the selected movie to the ui screen
+    val movie by viewModel.selectedMovie.collectAsState()
+    // call the selected movie to the ui screen
 
+    val response by viewModel.creditsResponse.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.getMovieCredits(movie?.id ?: 0)
     }
-    val director by viewModel.director.collectAsState()
-    val cast by viewModel.cast.collectAsState()
 
     // Scaffold is used to get a standard app layout.
     Scaffold(
         containerColor = DarkBackground,
 
-    ) { paddingValues ->
+    ) { innerPadding ->
         // and check if the movie is empty or not
         if (movie != null) {
             LazyColumn(
                 modifier = Modifier
-                    .padding(paddingValues)
                     .fillMaxSize()
+                    .padding(bottom = innerPadding.calculateBottomPadding())
+
             ) {
                 //  safe call of functions to display the movie details
 
@@ -83,11 +88,19 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
                 }
 
                 item {
-                    DirectorSection(director = director!!)
+                    when (response) {
+                        is UiState.Loading -> {Text("Loading......")}
+                        is UiState.Success -> {DirectorSection(director = (response as UiState.Success<CreditsResponse>).data.crew?.find { it?.job == "Director" }?.name!!)}
+                        is UiState.Error -> {Text("Error")}
+                    }
                 }
 
                 item {
-                    CastSection(cast = cast)
+                    when (response) {
+                        is UiState.Loading -> {Text("Loading......")}
+                        is UiState.Success -> {CastSection(cast = (response as UiState.Success<CreditsResponse>).data.cast as List<Cast>)}
+                        is UiState.Error -> {Text("Error")}
+                    }
                 }
 
                 item {
@@ -336,17 +349,15 @@ fun CastSection(cast: List<Cast>) {
 //        ){
     SectionCard(title = "Cast") {
         // FlowRow automatically wraps items to the next line.
-        FlowRow(
+        LazyRow(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            cast.forEach { cast ->
+            items(cast) {
+                    cast ->
                 CastChip(name = cast.name!!)
             }
         }
-
-
     }
 }
 
@@ -366,13 +377,17 @@ fun InfoCardsSection(movie: Movie) {
             label = "Release Date",
             value = movie.release_date,
             icon = Icons.Default.CalendarToday,
-            modifier = Modifier.weight(1f).padding(start = 16.dp)
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 16.dp)
         )
         SmallInfoCard(
             label = "Rating",
             value = "${movie.vote_average}/10",
             icon = Icons.Default.StarBorder,
-            modifier = Modifier.weight(1f).padding(end= 16.dp)
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 16.dp)
         )
 
     }

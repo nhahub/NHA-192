@@ -25,7 +25,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,7 +63,6 @@ import com.example.MovieApp.ui.themes.SplashScreenTheme
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import androidx.compose.runtime.rememberCoroutineScope
-
 class SplashingScreen : ComponentActivity() {
     val customFont = FontFamily(Font(R.font.spellofasia))
 
@@ -161,6 +159,8 @@ fun SplashingScreen(
     // then i call the get popular movies function to fetch data from api which will make the data
     // ready for the user before entering the main screen
     // those popular movies will be stored in the database
+    val scope = rememberCoroutineScope()
+
     LaunchedEffect(Unit) {
         viewModel.getPopularMovies(1)
         viewModel.getTopRatedMovies(1)
@@ -174,6 +174,7 @@ fun SplashingScreen(
             popularMoviesState is UiState.Error -> popularMoviesState
             topRatedMoviesState is UiState.Error -> topRatedMoviesState
             upcomingMoviesState is UiState.Error -> upcomingMoviesState
+
 
             // Priority 2: All Success? -> Show Success
             popularMoviesState is UiState.Success &&

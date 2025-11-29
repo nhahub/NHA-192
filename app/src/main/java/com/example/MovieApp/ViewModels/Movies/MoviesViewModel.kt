@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.MovieApp.Dto.Cast
+import com.example.MovieApp.Dto.CreditsResponse
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.Dto.Movie
 import com.example.MovieApp.Repo.Movies.MoviesRepository
@@ -214,27 +215,24 @@ open class  MoviesViewModel(
     }
 
     // Director and Cast (movie credits)
-    private val _director = MutableStateFlow<String?>(null)
-    val director: StateFlow<String?> = _director.asStateFlow()
+    private val _creditsResponse = MutableStateFlow<UiState<CreditsResponse>>(UiState.Loading)
+    val creditsResponse: StateFlow<UiState<CreditsResponse>> = _creditsResponse.asStateFlow()
 
-    private val _cast = MutableStateFlow<List<Cast>>(emptyList())
-    val cast: StateFlow<List<Cast>> = _cast.asStateFlow()
 
     fun getMovieCredits(movieId: Int) {
         viewModelScope.launch {
             when (val response = repo.getMovieCredits(movieId)) {
                 is UiState.Success -> {
-                    val directorName = response.data.crew?.find { it?.job == "Director" }?.name
-                    _director.value = directorName
-                    _cast.value = response.data.cast as List<Cast>
+                    _creditsResponse.value = UiState.Success(response.data)
+
                 }
                 is UiState.Error -> {
                     //  handle error state for credits
-                    _director.value = null
-                    _cast.value = emptyList()
+                    _creditsResponse.value = UiState.Error(response.message)
                 }
                 else -> {
                     // Load state if needed
+                    _creditsResponse.value = UiState.Loading
                 }
             }
         }
