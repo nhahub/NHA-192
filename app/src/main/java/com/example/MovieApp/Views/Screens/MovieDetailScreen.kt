@@ -12,6 +12,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import com.example.MovieApp.Dto.Cast
 import com.example.MovieApp.Dto.Movie
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
 
@@ -41,22 +43,29 @@ val WightGrayText = Color(0xFFE7DADA)
 
 // ** 3. main screen composable functions **
 /**
- *  Scaffold used to  place the top back button.
+ *  Scaffold for  place the top back button.
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
+    val movie by viewModel.selectedMovie.collectAsState()  // call the selected movie to the ui screen
+
+    LaunchedEffect(Unit) {
+        viewModel.getMovieCredits(movie?.id ?: 0)
+    }
+    val director by viewModel.director.collectAsState()
+    val cast by viewModel.cast.collectAsState()
+
     // Scaffold is used to get a standard app layout.
     Scaffold(
         containerColor = DarkBackground,
 
-        ) {
-        val movie by viewModel.selectedMovie.collectAsState()  // call the selected movie to the ui screen
-
+    ) { paddingValues ->
         // and check if the movie is empty or not
         if (movie != null) {
             LazyColumn(
                 modifier = Modifier
+                    .padding(paddingValues)
                     .fillMaxSize()
             ) {
                 //  safe call of functions to display the movie details
@@ -74,11 +83,11 @@ fun MovieDetailScreen(viewModel: MoviesViewModel,navController: NavController) {
                 }
 
                 item {
-                    DirectorSection(director = "Ang Lee")
+                    DirectorSection(director = director!!)
                 }
 
                 item {
-                    CastSection(cast = listOf("Chow Yun-fat", "Michelle Yeoh", "Zhang Ziyi","John wick","Tom Cruise","Donnie Yen"))
+                    CastSection(cast = cast)
                 }
 
                 item {
@@ -320,7 +329,7 @@ fun DirectorSection(director: String) {
  */
 @OptIn(ExperimentalLayoutApi::class) // For FlowRow
 @Composable
-fun CastSection(cast: List<String>) {
+fun CastSection(cast: List<Cast>) {
 //    val cardShape = RoundedCornerShape(16.dp)
 //        Box(modifier = Modifier.border(1.dp, GoldAccent, cardShape)
 //
@@ -332,8 +341,8 @@ fun CastSection(cast: List<String>) {
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
-            cast.forEach { name ->
-                CastChip(name = name)
+            cast.forEach { cast ->
+                CastChip(name = cast.name!!)
             }
         }
 

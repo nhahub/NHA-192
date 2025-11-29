@@ -1,14 +1,16 @@
 package com.example.MovieApp.Repo.Movies
 
-import com.example.MovieApp.Database.LocalDataSource
-import com.example.MovieApp.Dto.Movie
+
 import com.example.MovieApp.Network.RemoteDataSource
 import com.example.MovieApp.Utils.UiState
+import com.example.MovieApp.Database.LocalDataSource
+import com.example.MovieApp.Dto.Movie
+import com.example.MovieApp.Dto.CreditsResponse
 
 class MoviesRepositoryImpl(
     private val remoteDataSource: RemoteDataSource,
     private val localDataSource: LocalDataSource
-) : MoviesRepository {
+): MoviesRepository {
     override suspend fun getPopularMovies(page: Int): UiState<List<Movie>> {
         return remoteDataSource.getPopularMovies(page)
     }
@@ -42,5 +44,8 @@ class MoviesRepositoryImpl(
 
     override suspend fun delete(movie: Movie) {
         return localDataSource.delete(movie)
+    }
+    override suspend fun getMovieCredits(movieId: Int): UiState<CreditsResponse> {
+        return remoteDataSource.getMovieCredits(movieId)
     }
 }

@@ -1,10 +1,12 @@
 package com.example.MovieApp.ViewModels.Movies
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.MovieApp.Dto.Cast
+import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.Dto.Movie
 import com.example.MovieApp.Repo.Movies.MoviesRepository
-import com.example.MovieApp.Utils.UiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,19 +15,24 @@ import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-open class MoviesViewModel(
-    private val repo: MoviesRepository
-) : ViewModel() {
+open class  MoviesViewModel(
+    private val repo : MoviesRepository
+) : ViewModel()  {
 
     // Popular Movies
     private val _popularMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    val popularMovies: StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
+    val popularMovies : StateFlow<UiState<List<Movie>>> = _popularMovies.asStateFlow()
 
 
     fun getPopularMovies(page: Int) {
+        Log.d("MoviesViewModel", "getPopularMovies called with page: $page")
         viewModelScope.launch {
+            Log.d("MoviesViewModel", "getPopularMovies coroutine started")
             when (val response = repo.getPopularMovies(page)) {
-                is UiState.Success -> _popularMovies.value = UiState.Success(response.data)
+                is UiState.Success -> {
+                    _popularMovies.value = UiState.Success(response.data)
+                    Log.d("MoviesViewModel", "getPopularMovies success: ${response.data}")
+                }
                 is UiState.Error -> _popularMovies.value = UiState.Error(response.message)
                 else -> _popularMovies.value = UiState.Loading
             }
@@ -35,12 +42,17 @@ open class MoviesViewModel(
     // Upcoming Movies
     private val _UpComingMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val UpComingMovies: StateFlow<UiState<List<Movie>>> = _UpComingMovies.asStateFlow()
+    val UpComingMovies : StateFlow<UiState<List<Movie>>> = _UpComingMovies.asStateFlow()
 
     fun getUpComingMovies(page: Int) {
+        Log.d("MoviesViewModel", "getUpComingMovies called with page: $page")
         viewModelScope.launch {
+            Log.d("MoviesViewModel", "getUpComingMovies coroutine started")
             when (val response = repo.getUpComingMovies(page)) {
-                is UiState.Success -> _UpComingMovies.value = UiState.Success(response.data)
+                is UiState.Success ->{
+                    _UpComingMovies.value = UiState.Success(response.data)
+                    Log.d("MoviesViewModel", "getUpComingMovies success: ${response.data}")
+                }
                 is UiState.Error -> _UpComingMovies.value = UiState.Error(response.message)
                 else -> _UpComingMovies.value = UiState.Loading
             }
@@ -52,12 +64,17 @@ open class MoviesViewModel(
 
     private val _TopRatedMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val TopRatedMovies: StateFlow<UiState<List<Movie>>> = _TopRatedMovies.asStateFlow()
+    val TopRatedMovies : StateFlow<UiState<List<Movie>>> = _TopRatedMovies.asStateFlow()
 
     fun getTopRatedMovies(page: Int) {
+        Log.d("MoviesViewModel", "getTopRatedMovies called with page: $page")
         viewModelScope.launch {
+            Log.d("MoviesViewModel", "getTopRatedMovies coroutine started")
             when (val response = repo.getTopRatedMovies(page)) {
-                is UiState.Success -> _TopRatedMovies.value = UiState.Success(response.data)
+                is UiState.Success -> {
+                    _TopRatedMovies.value = UiState.Success(response.data)
+                    Log.d("MoviesViewModel", "getTopRatedMovies success: ${response.data}")
+                }
                 is UiState.Error -> _TopRatedMovies.value = UiState.Error(response.message)
                 else -> _TopRatedMovies.value = UiState.Loading
             }
@@ -69,11 +86,11 @@ open class MoviesViewModel(
 
     private val _ActionMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val ActionMovies: StateFlow<UiState<List<Movie>>> = _ActionMovies.asStateFlow()
+    val ActionMovies : StateFlow<UiState<List<Movie>>> = _ActionMovies.asStateFlow()
 
-    fun getActionMovies(page: Int) {
+    fun getActionMovies(page: Int ) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page, genreId = 28)) {
+            when (val response = repo.getMoviesByGenre(page = page , genreId = 28)) {
                 is UiState.Success -> _ActionMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _ActionMovies.value = UiState.Error(response.message)
                 else -> _ActionMovies.value = UiState.Loading
@@ -85,11 +102,11 @@ open class MoviesViewModel(
 
     private val _AdventureMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val AdventureMovies: StateFlow<UiState<List<Movie>>> = _AdventureMovies.asStateFlow()
+    val AdventureMovies : StateFlow<UiState<List<Movie>>> = _AdventureMovies.asStateFlow()
 
-    fun getAdventureMovies(page: Int) {
+    fun getAdventureMovies(page: Int ) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page, genreId = 12)) {
+            when (val response = repo.getMoviesByGenre(page = page , genreId = 12)) {
                 is UiState.Success -> _AdventureMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _AdventureMovies.value = UiState.Error(response.message)
                 else -> _AdventureMovies.value = UiState.Loading
@@ -101,11 +118,11 @@ open class MoviesViewModel(
 
     private val _ComedyMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val ComedyMovies: StateFlow<UiState<List<Movie>>> = _ComedyMovies.asStateFlow()
+    val ComedyMovies : StateFlow<UiState<List<Movie>>> = _ComedyMovies.asStateFlow()
 
-    fun getComedyMovies(page: Int) {
+    fun getComedyMovies(page: Int ) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page, genreId = 35)) {
+            when (val response = repo.getMoviesByGenre(page = page , genreId = 35)) {
                 is UiState.Success -> _ComedyMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _ComedyMovies.value = UiState.Error(response.message)
                 else -> _ComedyMovies.value = UiState.Loading
@@ -117,11 +134,11 @@ open class MoviesViewModel(
 
     private val _FantasyMovies = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
 
-    val FantasyMovies: StateFlow<UiState<List<Movie>>> = _FantasyMovies.asStateFlow()
+    val FantasyMovies : StateFlow<UiState<List<Movie>>> = _FantasyMovies.asStateFlow()
 
-    fun getFantasyMovies(page: Int) {
+    fun getFantasyMovies(page: Int ) {
         viewModelScope.launch {
-            when (val response = repo.getMoviesByGenre(page = page, genreId = 14)) {
+            when (val response = repo.getMoviesByGenre(page = page , genreId = 14)) {
                 is UiState.Success -> _FantasyMovies.value = UiState.Success(response.data)
                 is UiState.Error -> _FantasyMovies.value = UiState.Error(response.message)
                 else -> _FantasyMovies.value = UiState.Loading
@@ -134,7 +151,7 @@ open class MoviesViewModel(
 
     private val _FavoriteMovies = MutableStateFlow<List<Movie>>(emptyList())
 
-    val FavoriteMovies: StateFlow<List<Movie>> = _FavoriteMovies.asStateFlow()
+    val FavoriteMovies : StateFlow<List<Movie>> = _FavoriteMovies.asStateFlow()
 
     // for getting the favorite movies from the database
     fun getFavoriteMovies() {
@@ -160,7 +177,7 @@ open class MoviesViewModel(
 
     private val _WatchLaterMovies = MutableStateFlow<List<Movie>>(emptyList())
 
-    val WatchLaterMovies: StateFlow<List<Movie>> = _WatchLaterMovies.asStateFlow()
+    val WatchLaterMovies : StateFlow<List<Movie>> = _WatchLaterMovies.asStateFlow()
 
     // for getting the watch later movies from the database
 
@@ -196,6 +213,34 @@ open class MoviesViewModel(
         }
     }
 
+    // Director and Cast (movie credits)
+    private val _director = MutableStateFlow<String?>(null)
+    val director: StateFlow<String?> = _director.asStateFlow()
+
+    private val _cast = MutableStateFlow<List<Cast>>(emptyList())
+    val cast: StateFlow<List<Cast>> = _cast.asStateFlow()
+
+    fun getMovieCredits(movieId: Int) {
+        viewModelScope.launch {
+            when (val response = repo.getMovieCredits(movieId)) {
+                is UiState.Success -> {
+                    val directorName = response.data.crew?.find { it?.job == "Director" }?.name
+                    _director.value = directorName
+                    _cast.value = response.data.cast as List<Cast>
+                }
+                is UiState.Error -> {
+                    //  handle error state for credits
+                    _director.value = null
+                    _cast.value = emptyList()
+                }
+                else -> {
+                    // Load state if needed
+                }
+            }
+        }
+    }
+
+
     // Search Logic: Merges Action, Adventure, Comedy, and Fantasy movies
     private val _searchText = MutableStateFlow("")
     val searchText = _searchText.asStateFlow()
@@ -218,8 +263,36 @@ open class MoviesViewModel(
         movies.distinctBy { it.id }
     }
 
+    // Final search results combining search text, popular movies, and merged genres
+    val searchResults: StateFlow<UiState<List<Movie>>> = combine(
+        _searchText,
+        _popularMovies,
+        _mergedGenreMovies
+    ) { text, popularState, genreMovies ->
+
+        if (text.isBlank()) {
+            // Return popular movies if search text is empty
+            popularState
+        } else {
+            // Filter locally
+            val filtered = genreMovies.filter {
+                it.title.contains(text, ignoreCase = true)
+            }
+            UiState.Success(filtered)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = UiState.Loading
+    )
+
+    fun onSearchTextChange(text: String) {
+        _searchText.value = text
+    }
 
     // Helper to trigger loading of all sections needed for search
+
+
     private val _selectedMovie = MutableStateFlow<Movie?>(null)
     val selectedMovie: StateFlow<Movie?> = _selectedMovie.asStateFlow()
 

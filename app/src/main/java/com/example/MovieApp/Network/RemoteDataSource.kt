@@ -1,5 +1,6 @@
 package com.example.MovieApp.Network
 
+import com.example.MovieApp.Dto.CreditsResponse
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.Dto.Movie
 
@@ -13,4 +14,8 @@ interface RemoteDataSource {
 
     suspend fun searchMovies(query: String, page: Int) : UiState<List<Movie>>
 
+
+    suspend fun getMovieCredits(movieId: Int): UiState<CreditsResponse>
 }
+
+

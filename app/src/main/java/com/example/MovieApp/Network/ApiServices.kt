@@ -1,11 +1,13 @@
 package com.example.MovieApp.Network
 
 import com.example.MovieApp.BuildConfig
+import com.example.MovieApp.Dto.CreditsResponse
 
 import com.example.MovieApp.Dto.MovieResponse
 import com.example.MovieApp.Dto.UpComingMoviesResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface ApiServices {
@@ -51,5 +53,11 @@ interface ApiServices {
         @Query("page") page: Int = 1
     ): Response<MovieResponse>
 
+
+    @GET("movie/{movie_id}/credits")
+    suspend fun getMovieCredits(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = BuildConfig.MOVIE_API_KEY
+    ): Response<CreditsResponse>
 
 }

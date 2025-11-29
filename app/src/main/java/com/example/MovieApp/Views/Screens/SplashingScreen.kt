@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -61,6 +62,8 @@ import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModelFactory
 import com.example.MovieApp.ui.themes.SplashScreenTheme
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import androidx.compose.runtime.rememberCoroutineScope
 
 class SplashingScreen : ComponentActivity() {
     val customFont = FontFamily(Font(R.font.spellofasia))
@@ -184,7 +187,7 @@ fun SplashingScreen(
     // i made a box to make an overlay screen over the background image
     Box(
         modifier = Modifier.fillMaxSize()
-    ) {
+    ){
         // Background image
         Image(
             painter = painterResource(id = R.drawable.onboardingscreen1),
@@ -244,12 +247,11 @@ fun SplashingScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                 }
-
                 combinedUiState is UiState.Success -> {
                     Button(
                         onClick = {
                             if (authViewModel.isLoginedIn()) {
-                                navController.navigate("main_screen") {
+                                navController.navigate("main_screen"){
                                     popUpTo("splash_screen") { inclusive = true }
                                 }
                             } else {
@@ -270,9 +272,24 @@ fun SplashingScreen(
                         Text(text = "Continue")
                     }
                 }
-
                 combinedUiState is UiState.Error -> {
-                    Text(text = "Error: ${combinedUiState.message}")
+                    Text(
+                        text = "Error: ${combinedUiState.message}. Please try again",
+                        color = Color.White
+                    )
+
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                // Call the same API loading functions again
+                                viewModel.getPopularMovies(1)
+                                viewModel.getTopRatedMovies(1)
+                                viewModel.getUpComingMovies(1)
+                            }
+                        }
+                    ) {
+                        Text(text = "Try Again")
+                    }
                 }
             }
         }
