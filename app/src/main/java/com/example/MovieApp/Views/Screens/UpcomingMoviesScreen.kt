@@ -1,4 +1,4 @@
-package com.example.MovieApp.views
+package com.example.MovieApp.Views.Screens
 
 import MovieCard
 import androidx.compose.foundation.Image
@@ -47,7 +47,8 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
-import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
+import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
+import com.example.MovieApp.Views.Components.DrawerContent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -162,7 +163,11 @@ fun UpcomingMovies(viewModel: MoviesViewModel, navController: NavController){
 
                             is UiState.Success -> {
                                 items(upcomingMoviesState.data) { movie ->
-                                    MovieCard(movie = movie)
+                                    MovieCard(
+                                        movie = movie,
+                                        navController = navController,
+                                        viewModel = viewModel,
+                                    )
                                 }
                             }
 
