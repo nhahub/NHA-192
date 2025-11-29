@@ -30,7 +30,7 @@ import com.example.MovieApp.R
 @Composable
 fun AuthScreen(
     navController: NavController
-){
+) {
 
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -109,8 +109,9 @@ fun AuthScreen(
         }
     }
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
-fun AuthScreenPreview(){
+fun AuthScreenPreview() {
     AuthScreen(navController = rememberNavController())
 }

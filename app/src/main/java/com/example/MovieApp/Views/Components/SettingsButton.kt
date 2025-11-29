@@ -1,4 +1,4 @@
-package com.example.MovieApp.Views
+package com.example.MovieApp.Views.Components
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.MovieApp.ui.theme.Saffron
-import com.example.MovieApp.ui.theme.Typography
+import com.example.MovieApp.ui.themes.Saffron
+import com.example.MovieApp.ui.themes.Typography
 
 @Composable
 fun SettingsButton(
@@ -32,7 +32,7 @@ fun SettingsButton(
     Box(
         modifier = Modifier.padding(8.dp),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Button(
             modifier = Modifier
                 .padding(horizontal = 24.dp, vertical = 28.dp)

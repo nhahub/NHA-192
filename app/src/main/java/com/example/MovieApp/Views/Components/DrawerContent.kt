@@ -1,14 +1,28 @@
-package com.example.MovieApp.Views
+package com.example.MovieApp.Views.Components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Movie
 import androidx.compose.material.icons.outlined.Settings
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,8 +30,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.MovieApp.ui.theme.OldBrick
-import com.example.MovieApp.ui.theme.Saffron
+import com.example.MovieApp.ui.themes.OldBrick
+import com.example.MovieApp.ui.themes.Saffron
 
 @Composable
 fun DrawerContent(navController: NavController) {
@@ -96,7 +110,7 @@ fun DrawerContent(navController: NavController) {
                         // (4) استخدمنا Filled.Call بعد ما عملنا Import
                         Icon(Icons.Filled.Movie, contentDescription = null)
                     },
-                    onClick = { navController.navigate("Adventure")}
+                    onClick = { navController.navigate("Adventure") }
                 )
 
                 // Comedy with genre id 35
@@ -104,8 +118,9 @@ fun DrawerContent(navController: NavController) {
                     modifier = Modifier.padding(horizontal = 12.dp), // تظبيط المسافات
                     label = {
                         Text(
-                        text = "Comedy Movies"
-                    ) },
+                            text = "Comedy Movies"
+                        )
+                    },
                     selected = false,
                     icon = {
                         Icon(Icons.Filled.Movie, contentDescription = null)
@@ -137,7 +152,6 @@ fun DrawerContent(navController: NavController) {
                     onClick = { navController.navigate("TopRated") }
                 )
             }
-
 
 
             // === الجزء السفلي (Settings Button) ===

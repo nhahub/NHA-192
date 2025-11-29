@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.MovieApp.R
 import com.example.MovieApp.Auth.AuthResult
+import com.example.MovieApp.R
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import kotlinx.coroutines.delay
 
@@ -49,7 +49,7 @@ fun SignInScreen(
 
     // Handle Navigation on Success
     LaunchedEffect(signInstate) {
-        if(signInstate is AuthResult.Success<String>){
+        if (signInstate is AuthResult.Success<String>) {
             delay(1000)
             navController.popBackStack()
             navController.navigate("main_screen") {
@@ -135,7 +135,9 @@ fun SignInScreen(
                     ),
                     border = BorderStroke(1.dp, Color(0x66FFFFFF)),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
-                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
                 ) {
                     Text("Back")
                 }
@@ -155,7 +157,9 @@ fun SignInScreen(
                         defaultElevation = 6.dp,
                         pressedElevation = 2.dp
                     ),
-                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
                 ) {
                     Text("Sign In")
                 }
@@ -171,7 +175,10 @@ fun SignInScreen(
                     fontSize = 14.sp,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
-                        .background(Color(0x33000000), shape = RoundedCornerShape(8.dp)) // خلفية خفيفة عشان الكلام يبان
+                        .background(
+                            Color(0x33000000),
+                            shape = RoundedCornerShape(8.dp)
+                        ) // خلفية خفيفة عشان الكلام يبان
                         .padding(8.dp)
                 )
             }

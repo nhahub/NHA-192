@@ -1,4 +1,4 @@
-package com.example.MovieApp.Views
+package com.example.MovieApp.Views.Components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -21,8 +21,10 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,8 +34,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 import androidx.navigation.NavController
 
 
@@ -43,7 +43,7 @@ data class BottomNavItem(
 )
 
 @Composable
-fun CustomBottomNavBar(modifier: Modifier = Modifier , navController: NavController) {
+fun CustomBottomNavBar(modifier: Modifier = Modifier, navController: NavController) {
 
     var selectedIndex by remember { mutableStateOf(0) }
 
@@ -53,7 +53,7 @@ fun CustomBottomNavBar(modifier: Modifier = Modifier , navController: NavControl
         BottomNavItem("稍后", Icons.Default.AccessTimeFilled)
     )
 
-    val Screen =listOf("home","favorites","watchlater")
+    val Screen = listOf("home", "favorites", "watchlater")
 
     val selectedBorderBrush = Brush.linearGradient(
         listOf(Color(0xFFFDEB71), Color(0xFFF8D423))
@@ -97,7 +97,7 @@ fun CustomBottomNavBar(modifier: Modifier = Modifier , navController: NavControl
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .padding(horizontal = 4.dp,vertical = 8.dp)
+                    .padding(horizontal = 4.dp, vertical = 8.dp)
                     .height(56.dp)
                     .then(selectedModifier)
                     .clickable(

@@ -18,6 +18,7 @@ class AuthViewModel(
 
     // Internal mutable state
     private val _signupState = MutableStateFlow<AuthResult<String>>(AuthResult.Loading)
+
     // Exposed as read-only to UI
     val signupState = _signupState.asStateFlow()
 
@@ -52,10 +53,10 @@ class AuthViewModel(
     }
 
 
-
     // Internal mutable state
 
     private val _signInState = MutableStateFlow<AuthResult<String>>(AuthResult.Loading)
+
     // Exposed as read-only to UI
     val signInState = _signInState.asStateFlow()
 
@@ -76,7 +77,7 @@ class AuthViewModel(
     }
 
     // Function to check if user is Sign in
-    fun SignIn(email : String , password : String) {
+    fun SignIn(email: String, password: String) {
         Log.d(tag, "Starting sign-in process for email: $email")
         _signInState.value = AuthResult.Loading
         viewModelScope.launch {
@@ -102,17 +103,23 @@ class AuthViewModel(
     }
 
     // Function to get current user
-    fun getCurrentUser() : FirebaseUser? {
+    fun getCurrentUser(): FirebaseUser? {
         Log.d(tag, "Getting current user")
         return repo.getCurrentUser()
     }
 
-    fun changePassword(oldPassword:String, newPassword: String) {
+    fun changePassword(oldPassword: String, newPassword: String) {
         _signInState.value = AuthResult.Loading
         viewModelScope.launch {
             try {
                 val result =
-                    getCurrentUser()?.email?.let { repo.changePassword(it, oldPassword, newPassword) }
+                    getCurrentUser()?.email?.let {
+                        repo.changePassword(
+                            it,
+                            oldPassword,
+                            newPassword
+                        )
+                    }
                 if (result != null) {
                     _signInState.value = result
                 }

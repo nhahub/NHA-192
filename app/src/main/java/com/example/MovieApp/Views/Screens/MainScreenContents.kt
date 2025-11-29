@@ -10,17 +10,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.MovieApp.Auth.EmailPasswordAuthManagerRepository
 import com.example.MovieApp.Datastore.DataStoreManager
+import com.example.MovieApp.Network.RemoteDataSourceImpl
+import com.example.MovieApp.Repo.Search.SearchRepositoryImpl
 import com.example.MovieApp.Repo.Settings.SettingsRepositoryImpl
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import com.example.MovieApp.ViewModels.Auth.AuthViewModelFactory
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
 import com.example.MovieApp.ViewModels.Search.SearchViewModel
+import com.example.MovieApp.ViewModels.Search.SearchViewModelFactory
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModelFactory
+import com.example.MovieApp.Views.Components.CustomBottomNavBar
 import com.example.MovieApp.Views.Screens.ActionMovies
 import com.example.MovieApp.Views.Screens.AdventureMovies
 import com.example.MovieApp.Views.Screens.ComedyMovies
-import com.example.MovieApp.Views.CustomBottomNavBar
 import com.example.MovieApp.Views.Screens.FantasyMovies
 import com.example.MovieApp.Views.Screens.FavoritesScreen
 import com.example.MovieApp.Views.Screens.HomeScreen
@@ -33,7 +36,7 @@ import com.example.movie_app.MovieDetailScreen
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainScreen(viewModel: MoviesViewModel, SviewModel: SearchViewModel) {
+fun MainScreen(viewModel: MoviesViewModel) {
 
     val navController = rememberNavController()
     val context = LocalContext.current
@@ -41,6 +44,14 @@ fun MainScreen(viewModel: MoviesViewModel, SviewModel: SearchViewModel) {
     val authViewModel: AuthViewModel = viewModel(
         factory = AuthViewModelFactory(
             repo = EmailPasswordAuthManagerRepository()
+        )
+    )
+
+    val searchViewModel: SearchViewModel = viewModel(
+        factory = SearchViewModelFactory(
+            repo = SearchRepositoryImpl(
+                remoteDataSource = RemoteDataSourceImpl()
+            )
         )
     )
 
@@ -65,32 +76,32 @@ fun MainScreen(viewModel: MoviesViewModel, SviewModel: SearchViewModel) {
             modifier = Modifier.padding(padding)
         ) {
             composable("home") {
-                HomeScreen(viewModel, navController=navController)
+                HomeScreen(viewModel, navController = navController)
             }
             composable("favorites") {
-                FavoritesScreen(viewModel = viewModel , navController=navController)
+                FavoritesScreen(viewModel = viewModel, navController = navController)
             }
             composable("watchlater") {
-                WatchLaterScreen(viewModel = viewModel , navController = navController)
+                WatchLaterScreen(viewModel = viewModel, navController = navController)
             }
             composable("Action") {
-                ActionMovies(viewModel = viewModel, navController=navController)
+                ActionMovies(viewModel = viewModel, navController = navController)
             }
             composable("Adventure") {
-                AdventureMovies(viewModel = viewModel,navController=navController)
+                AdventureMovies(viewModel = viewModel, navController = navController)
             }
             composable("Comedy") {
-                ComedyMovies(viewModel = viewModel, navController=navController)
+                ComedyMovies(viewModel = viewModel, navController = navController)
             }
             composable("Fantasy") {
-                FantasyMovies(viewModel = viewModel, navController=navController)
+                FantasyMovies(viewModel = viewModel, navController = navController)
             }
             composable("TopRated") {
-                TopRatedMoviesScreen(viewModel = viewModel, navController=navController)
+                TopRatedMoviesScreen(viewModel = viewModel, navController = navController)
             }
             composable("search") {
                 SearchScreen(
-                    searchViewModel = SviewModel,
+                    searchViewModel = searchViewModel,
                     movieViewModel = viewModel,
                     onBack = { navController.popBackStack() },
                     navController = navController,
@@ -101,7 +112,7 @@ fun MainScreen(viewModel: MoviesViewModel, SviewModel: SearchViewModel) {
                     viewModel = viewModel, navController = navController
                 )
             }
-            composable("settings"){
+            composable("settings") {
                 SettingsScreen(
                     authViewModel = authViewModel,
                     navController = navController,

@@ -55,7 +55,7 @@ import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
-import com.example.MovieApp.Views.DrawerContent
+import com.example.MovieApp.Views.Components.DrawerContent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -70,122 +70,129 @@ fun ActionMovies(viewModel: MoviesViewModel, navController: NavController) {
         viewModel.getActionMovies(1)
     }
 
-    Scaffold (
+    Scaffold(
         topBar = { ActionScreenTopBar() },
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(Color(0xFFE0F7FA))
-    ){
-        paddingValues ->  ModalNavigationDrawer(
-        drawerState = drawerState,
-        drawerContent = {
-            ModalDrawerSheet(
-                windowInsets = WindowInsets(0.dp)
-            ) {
-                DrawerContent(navController = navController)
+    ) { paddingValues ->
+        ModalNavigationDrawer(
+            drawerState = drawerState,
+            drawerContent = {
+                ModalDrawerSheet(
+                    windowInsets = WindowInsets(0.dp)
+                ) {
+                    DrawerContent(navController = navController)
+                }
             }
-        }
-    ) {
-        val actionMoviesState = viewModel.ActionMovies.collectAsState().value
+        ) {
+            val actionMoviesState = viewModel.ActionMovies.collectAsState().value
 
-        Box(modifier = Modifier.fillMaxSize()) {
-            Image(
-                painter = painterResource(id = R.drawable.movies_genres_bg_2),
-                contentDescription = "Sign Up Screen Background",
-                modifier = Modifier.fillMaxSize(),
-                contentScale = ContentScale.Crop
-            )
+            Box(modifier = Modifier.fillMaxSize()) {
+                Image(
+                    painter = painterResource(id = R.drawable.movies_genres_bg_2),
+                    contentDescription = "Sign Up Screen Background",
+                    modifier = Modifier.fillMaxSize(),
+                    contentScale = ContentScale.Crop
+                )
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(Color(0x80000000))
-            )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(0x80000000))
+                )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues)
-            ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(paddingValues)
+                ) {
+                    Column {
 
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(10.dp)
-                            .clickable { navController.navigate("search") }
-                    ) {
-                        IconButton(onClick = {
-                            scope.launch { drawerState.open() }
-                        }) {
-                            Icon(
-                                Icons.Default.Menu,
-                                contentDescription = "Menu",
-                                tint = Color.White
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(10.dp)
+                                .clickable { navController.navigate("search") }
+                        ) {
+                            IconButton(onClick = {
+                                scope.launch { drawerState.open() }
+                            }) {
+                                Icon(
+                                    Icons.Default.Menu,
+                                    contentDescription = "Menu",
+                                    tint = Color.White
+                                )
+                            }
+
+                            Spacer(modifier = Modifier.width(8.dp))
+
+                            OutlinedTextField(
+                                value = searchText,
+                                onValueChange = {},
+                                enabled = false,
+                                readOnly = true,
+                                leadingIcon = {
+                                    Icon(
+                                        imageVector = Icons.Default.Search,
+                                        contentDescription = null,
+                                        tint = Color(0xFFFFD54F)
+                                    )
+                                },
+                                placeholder = {
+                                    Text(
+                                        "Search..",
+                                        color = Color(0xFFBDBDBD)
+                                    )
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
+                                shape = RoundedCornerShape(16.dp),
+                                colors = OutlinedTextFieldDefaults.colors(
+                                    disabledBorderColor = Color(0xFFFFD54F),
+                                    disabledTextColor = Color(0xFFE0E0E0),
+                                    cursorColor = Color(0xFFFFEB3B)
+
+                                )
                             )
                         }
 
-                        Spacer(modifier = Modifier.width(8.dp))
-
-                        OutlinedTextField(
-                            value = searchText,
-                            onValueChange = {},
-                            enabled = false,
-                            readOnly = true,
-                            leadingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.Search,
-                                    contentDescription = null,
-                                    tint = Color(0xFFFFD54F)
-                                )
-                            },
-                            placeholder = {
-                                Text(
-                                    "Search..",
-                                    color = Color(0xFFBDBDBD)
-                                )
-                            },
-                            modifier = Modifier.fillMaxWidth()
-                                .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
-                            shape = RoundedCornerShape(16.dp),
-                            colors = OutlinedTextFieldDefaults.colors(
-                                disabledBorderColor = Color(0xFFFFD54F),
-                                disabledTextColor = Color(0xFFE0E0E0),
-                                cursorColor = Color(0xFFFFEB3B)
-
-                            )
-                        )
-                    }
-
-                    LazyVerticalGrid(
-                        columns = GridCells.Fixed(2),
-                        contentPadding = PaddingValues(8.dp),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
-                    ) {
-                        when (actionMoviesState) {
-                            is UiState.Loading -> {
-                                item {
-                                    Text(
-                                        "Loading...",
-                                        color = Color.White,
-                                        modifier = Modifier.padding(paddingValues)
-                                    )
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(2),
+                            contentPadding = PaddingValues(8.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            when (actionMoviesState) {
+                                is UiState.Loading -> {
+                                    item {
+                                        Text(
+                                            "Loading...",
+                                            color = Color.White,
+                                            modifier = Modifier.padding(paddingValues)
+                                        )
+                                    }
                                 }
-                            }
 
-                            is UiState.Success -> {
-                                items(actionMoviesState.data) { movie ->
-                                    MovieCard(movie = movie,navController = navController,viewModel = viewModel)
+                                is UiState.Success -> {
+                                    items(actionMoviesState.data) { movie ->
+                                        MovieCard(
+                                            movie = movie,
+                                            navController = navController,
+                                            viewModel = viewModel
+                                        )
+                                    }
                                 }
-                            }
 
-                            is UiState.Error -> {
-                                item {
-                                    Text(
-                                        text = "Error: ${actionMoviesState.message}",
-                                        color = Color.Red,
-                                        modifier = Modifier.padding(16.dp)
-                                    )
+                                is UiState.Error -> {
+                                    item {
+                                        Text(
+                                            text = "Error: ${actionMoviesState.message}",
+                                            color = Color.Red,
+                                            modifier = Modifier.padding(16.dp)
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -193,9 +200,8 @@ fun ActionMovies(viewModel: MoviesViewModel, navController: NavController) {
                 }
             }
         }
-        }
     }
-    }
+}
 
 @Composable
 fun ActionScreenTopBar() {
@@ -231,7 +237,7 @@ fun ActionScreenTopBar() {
             color = Color.White,
             fontSize = 30.sp,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 25.dp  , bottom = 25.dp)
+            modifier = Modifier.padding(top = 25.dp, bottom = 25.dp)
         )
     }
 }

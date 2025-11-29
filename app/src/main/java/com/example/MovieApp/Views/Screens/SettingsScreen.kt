@@ -12,8 +12,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -49,15 +49,15 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.MovieApp.R
-import com.example.MovieApp.ui.theme.Almond
-import com.example.MovieApp.ui.theme.Cherrywood
-import com.example.MovieApp.ui.theme.Grapefruit
-import com.example.MovieApp.ui.theme.OldBrick
-import com.example.MovieApp.ui.theme.Saffron
-import com.example.MovieApp.ui.theme.Typography
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
-import com.example.MovieApp.Views.ChangePasswordDialog
+import com.example.MovieApp.Views.Components.ChangePasswordDialog
+import com.example.MovieApp.ui.themes.Almond
+import com.example.MovieApp.ui.themes.Cherrywood
+import com.example.MovieApp.ui.themes.Grapefruit
+import com.example.MovieApp.ui.themes.OldBrick
+import com.example.MovieApp.ui.themes.Saffron
+import com.example.MovieApp.ui.themes.Typography
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -137,7 +137,7 @@ fun SettingsScreen(
                     color = Saffron
                 )
                 Spacer(modifier = Modifier.height(28.dp))
-                ButtonSettingsCard (
+                ButtonSettingsCard(
                     title = "Change Password",
                     description = "Update your account password",
                     icon = Icons.Outlined.Lock,
@@ -174,11 +174,11 @@ fun ButtonSettingsCard(
     title: String,
     description: String,
     icon: ImageVector,
-    buttonText:String,
+    buttonText: String,
     onButtonClick: () -> Unit
 ) {
     Column(modifier = Modifier.padding(horizontal = 28.dp)) {
-        Column (
+        Column(
             Modifier
                 .fillMaxWidth()
                 .background(
@@ -253,7 +253,7 @@ fun SwitchSettingsCard(
     checked: Boolean
 ) {
     Column(modifier = Modifier.padding(horizontal = 28.dp)) {
-        Row (
+        Row(
             Modifier
                 .fillMaxWidth()
                 .background(
@@ -319,7 +319,7 @@ fun SwitchSettingsCard(
 @Composable
 fun AboutCard() {
     Column(modifier = Modifier.padding(horizontal = 28.dp)) {
-        Column (
+        Column(
             Modifier
                 .fillMaxWidth()
                 .background(

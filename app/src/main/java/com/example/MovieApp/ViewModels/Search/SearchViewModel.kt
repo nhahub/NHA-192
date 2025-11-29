@@ -2,9 +2,9 @@ package com.example.MovieApp.ViewModels.Search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.MovieApp.Dto.Movie
 import com.example.MovieApp.Repo.Search.SearchRepository
 import com.example.MovieApp.Utils.UiState
-import com.example.MovieApp.Dto.Movie
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,12 +12,12 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class SearchViewModel(private val repo: SearchRepository): ViewModel() {
+class SearchViewModel(private val repo: SearchRepository) : ViewModel() {
     private val _searchedMovie = MutableStateFlow<UiState<List<Movie>>>(UiState.Loading)
-    val searchedMovie : StateFlow<UiState<List<Movie>>> = _searchedMovie.asStateFlow()
+    val searchedMovie: StateFlow<UiState<List<Movie>>> = _searchedMovie.asStateFlow()
 
     private val _query = MutableStateFlow("")
-    val query : StateFlow<String> = _query.asStateFlow()
+    val query: StateFlow<String> = _query.asStateFlow()
 
     private var searchJob: Job? = null
     fun searchForAMovie(query: String, page: Int) {
@@ -44,6 +44,8 @@ class SearchViewModel(private val repo: SearchRepository): ViewModel() {
             }
         }
     }
+
+
 
 
 }

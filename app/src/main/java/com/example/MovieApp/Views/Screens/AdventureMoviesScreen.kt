@@ -48,7 +48,7 @@ import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
-import com.example.MovieApp.Views.DrawerContent
+import com.example.MovieApp.Views.Components.DrawerContent
 import kotlinx.coroutines.launch
 
 @Composable
@@ -154,14 +154,20 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController) {
                     when (adventureMoviesState) {
                         is UiState.Loading -> {
                             item {
-                                Text("Loading...", color = Color.White, modifier = Modifier.padding(16.dp))
+                                Text(
+                                    "Loading...",
+                                    color = Color.White,
+                                    modifier = Modifier.padding(16.dp)
+                                )
                             }
                         }
 
                         is UiState.Success -> {
                             items(adventureMoviesState.data) { movie ->
                                 MovieCard(
-                                    movie = movie , navController = navController , viewModel = viewModel
+                                    movie = movie,
+                                    navController = navController,
+                                    viewModel = viewModel
                                 )
                             }
                         }

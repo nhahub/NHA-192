@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class SettingsViewModel(
     private val repository: SettingsRepository
-): ViewModel() {
+) : ViewModel() {
 
     val darkMode: StateFlow<Boolean> = repository.darkMode.stateIn(
         scope = viewModelScope,

@@ -1,7 +1,6 @@
 package com.example.MovieApp.Views.Screens
 
 import MainScreen
-import androidx.compose.ui.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -25,42 +24,47 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
-import com.example.MovieApp.ViewModels.Movies.MoviesViewModelFactory
-import com.example.MovieApp.Utils.UiState
-import com.example.MovieApp.Network.RemoteDataSourceImpl
-import com.example.MovieApp.Repo.Movies.MoviesRepositoryImpl
-import com.example.MovieApp.ui.theme.SplashScreenTheme
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.MovieApp.R
-import com.example.MovieApp.Repo.Search.SearchRepositoryImpl
 import com.example.MovieApp.Auth.EmailPasswordAuthManagerRepository
 import com.example.MovieApp.Database.LocalDataSourceImpl
 import com.example.MovieApp.Datastore.DataStoreManager
+import com.example.MovieApp.Network.RemoteDataSourceImpl
+import com.example.MovieApp.R
+import com.example.MovieApp.Repo.Movies.MoviesRepositoryImpl
+import com.example.MovieApp.Repo.Search.SearchRepositoryImpl
 import com.example.MovieApp.Repo.Settings.SettingsRepositoryImpl
+import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import com.example.MovieApp.ViewModels.Auth.AuthViewModelFactory
+import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
+import com.example.MovieApp.ViewModels.Movies.MoviesViewModelFactory
 import com.example.MovieApp.ViewModels.Search.SearchViewModel
 import com.example.MovieApp.ViewModels.Search.SearchViewModelFactory
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModelFactory
+import com.example.MovieApp.ui.themes.SplashScreenTheme
 import kotlinx.coroutines.delay
 
 class SplashingScreen : ComponentActivity() {
+    val customFont = FontFamily(Font(R.font.spellofasia))
+
     // creating view model instance by factory design pattern
     val viewModel: MoviesViewModel by viewModels {
         MoviesViewModelFactory(
@@ -106,7 +110,11 @@ class SplashingScreen : ComponentActivity() {
                     startDestination = "splash_screen"
                 ) {
                     composable("splash_screen") {
-                        SplashingScreen(viewModel = viewModel, navController = navController, authViewModel = authViewModel)
+                        SplashingScreen(
+                            viewModel = viewModel,
+                            navController = navController,
+                            authViewModel = authViewModel
+                        )
                     }
                     composable("auth_screen") {
                         AuthScreen(navController = navController)
@@ -125,8 +133,7 @@ class SplashingScreen : ComponentActivity() {
                     }
                     composable("main_screen") {
                         MainScreen(
-                            viewModel = viewModel,
-                            SviewModel = searchViewModel
+                            viewModel = viewModel
                         )
                     }
                 }
@@ -176,7 +183,7 @@ fun SplashingScreen(
     // i made a box to make an overlay screen over the background image
     Box(
         modifier = Modifier.fillMaxSize()
-    ){
+    ) {
         // Background image
         Image(
             painter = painterResource(id = R.drawable.onboardingscreen1),
@@ -210,23 +217,25 @@ fun SplashingScreen(
             verticalArrangement = Arrangement.Center // or Top if you want top
         ) {
             Text(
-                text = "Movie Name",
+                text = "DragoBlaze",
                 modifier = Modifier.padding(16.dp),
                 fontSize = 24.sp,
                 color = Color.White,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                fontFamily = customFont
             )
             Text(
-                text = "Discover and Explore Movies",
+                text = "Discover and Explore Movies for free",
                 modifier = Modifier.padding(16.dp),
                 fontSize = 16.sp,
-                color = Color.White
+                color = Color.White,
+                fontFamily = customFont
             )
-            when{
+            when {
                 (combinedUiState is UiState.Loading && !showButton) || (combinedUiState is UiState.Success && !showButton) -> {
                     CircularProgressIndicator(
                         color = Color.White,
-                    modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                     Text(
                         text = "Loading...",
@@ -234,11 +243,12 @@ fun SplashingScreen(
                         modifier = Modifier.padding(8.dp)
                     )
                 }
+
                 combinedUiState is UiState.Success -> {
                     Button(
                         onClick = {
                             if (authViewModel.isLoginedIn()) {
-                                navController.navigate("main_screen"){
+                                navController.navigate("main_screen") {
                                     popUpTo("splash_screen") { inclusive = true }
                                 }
                             } else {
@@ -259,7 +269,8 @@ fun SplashingScreen(
                         Text(text = "Continue")
                     }
                 }
-                combinedUiState is UiState.Error  -> {
+
+                combinedUiState is UiState.Error -> {
                     Text(text = "Error: ${combinedUiState.message}")
                 }
             }
@@ -272,7 +283,10 @@ fun SplashingScreen(
 @Composable
 fun SplashScreenPreview() {
     val fakeViewModel = MoviesViewModelFactory(
-        repo = MoviesRepositoryImpl(RemoteDataSourceImpl(), LocalDataSourceImpl(LocalContext.current))
+        repo = MoviesRepositoryImpl(
+            RemoteDataSourceImpl(),
+            LocalDataSourceImpl(LocalContext.current)
+        )
     ).create(MoviesViewModel::class.java)
 
     val fakeauthViewModel = AuthViewModelFactory(
@@ -280,5 +294,9 @@ fun SplashScreenPreview() {
     ).create(AuthViewModel::class.java)
 
 
-    SplashingScreen(viewModel = fakeViewModel , navController = NavController(LocalContext.current), authViewModel = fakeauthViewModel)
+    SplashingScreen(
+        viewModel = fakeViewModel,
+        navController = NavController(LocalContext.current),
+        authViewModel = fakeauthViewModel
+    )
 }
