@@ -1,5 +1,6 @@
 package com.example.MovieApp.Views.Screens
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -17,6 +18,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ExitToApp
+import androidx.compose.material.icons.automirrored.outlined.ExitToApp
+import androidx.compose.material.icons.filled.ExitToApp
+import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Button
@@ -63,6 +68,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    parentNavController: NavController,
     navController: NavController,
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel
@@ -70,11 +76,25 @@ fun SettingsScreen(
     val darkMode by settingsViewModel.darkMode.collectAsState()
     val coroutineScope = rememberCoroutineScope()
     val openAlertDialog = remember { mutableStateOf(false) }
+    val openSignOutDialog = remember { mutableStateOf(false) }
 
     if (openAlertDialog.value) {
         ChangePasswordDialog(
             onDismissRequest = { openAlertDialog.value = false },
             authViewModel = authViewModel
+        )
+    }
+
+    if (openSignOutDialog.value) {
+        SignOutConfirmationDialog(
+            onDismissRequest = { openSignOutDialog.value = false },
+            onConfirmSignOut = {
+                authViewModel.signOut()
+                parentNavController.popBackStack()
+//                parentNavController.navigate("splash_screen") {
+//                    parentNavController.popUpTo("settings") { inclusive = true }
+//                }
+            }
         )
     }
 
@@ -144,16 +164,16 @@ fun SettingsScreen(
                     buttonText = "Change Password",
                     onButtonClick = { openAlertDialog.value = true }
                 )
-                Spacer(modifier = Modifier.height(28.dp))
-                SwitchSettingsCard(
-                    title = "Dark Mode",
-                    description = "Toggle dark theme\nappearance",
-                    icon = R.drawable.dark,
-                    onCheckedChange = { enabled ->
-                        coroutineScope.launch { settingsViewModel.setDarkMode(enabled = enabled) }
-                    },
-                    checked = darkMode
-                )
+//                Spacer(modifier = Modifier.height(28.dp))
+//                SwitchSettingsCard(
+//                    title = "Dark Mode",
+//                    description = "Toggle dark theme\nappearance",
+//                    icon = R.drawable.dark,
+//                    onCheckedChange = { enabled ->
+//                        coroutineScope.launch { settingsViewModel.setDarkMode(enabled = enabled) }
+//                    },
+//                    checked = darkMode
+//                )
 //                Spacer(modifier = Modifier.height(28.dp))
 //                ButtonSettingsCard(
 //                    title = "Profile Picture",
@@ -163,7 +183,18 @@ fun SettingsScreen(
 //                    onButtonClick = {}
 //                )
                 Spacer(modifier = Modifier.height(28.dp))
+                ButtonSettingsCard (
+                    title = "Sign out",
+                    description = "Log out of your account",
+                    icon = Icons.AutoMirrored.Outlined.ExitToApp,
+                    buttonText = "Sign out",
+                    onButtonClick = {
+                        openSignOutDialog.value = true
+                    }
+                )
+                Spacer(modifier = Modifier.height(28.dp))
                 AboutCard()
+                Spacer(modifier = Modifier.height(28.dp))
             }
         }
     }
@@ -426,6 +457,56 @@ fun AboutCard() {
             )
         }
     }
+}
+
+@Composable
+fun SignOutConfirmationDialog(
+    onDismissRequest: () -> Unit,
+    onConfirmSignOut: () -> Unit
+) {
+    androidx.compose.material3.AlertDialog(
+        onDismissRequest = onDismissRequest,
+        title = {
+            Text(
+                "Sign Out",
+                style = Typography.headlineSmall,
+                color = Color.White
+            )
+        },
+        text = {
+            Text(
+                "Are you sure you want to sign out? You'll need to log in again to access your account.",
+                style = Typography.bodyMedium,
+                color = Color.LightGray
+            )
+        },
+        confirmButton = {
+            Button(
+                onClick = onConfirmSignOut,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Saffron,
+                    contentColor = Color.Black
+                )
+            ) {
+                Text("Sign Out", style = Typography.titleMedium)
+            }
+        },
+        dismissButton = {
+            Button(
+                onClick = onDismissRequest,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Saffron
+                ),
+                border = BorderStroke(1.dp, Saffron)
+            ) {
+                Text("Cancel", style = Typography.titleMedium)
+            }
+        },
+        containerColor = Color.Black.copy(alpha = 0.9f),
+        shape = RoundedCornerShape(16.dp),
+        tonalElevation = 8.dp
+    )
 }
 
 //@Preview(showBackground = true, showSystemUi = true)
