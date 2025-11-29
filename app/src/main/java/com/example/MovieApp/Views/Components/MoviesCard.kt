@@ -118,7 +118,7 @@ fun MovieCard(
 
             // A Text for the rating
             Text(
-                text = movie.vote_average.toString(),
+                text = String.format("%.1f", movie.vote_average),
                 color = Color.White,
                 style = MaterialTheme.typography.bodySmall,
                 fontWeight = FontWeight.Bold
@@ -128,7 +128,7 @@ fun MovieCard(
 
             // A Text for the release date
             Text(
-                text = "(${movie.release_date})",
+                text = "(${movie.release_date.substringBefore("-")})",
                 color = Color.Gray,
                 style = MaterialTheme.typography.bodySmall
             )
