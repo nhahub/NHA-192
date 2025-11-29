@@ -25,6 +25,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
@@ -59,6 +60,7 @@ import com.example.MovieApp.ViewModels.Search.SearchViewModelFactory
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModelFactory
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SplashingScreen : ComponentActivity() {
     // creating view model instance by factory design pattern
@@ -147,6 +149,10 @@ fun SplashingScreen(
     val topRatedMoviesState by viewModel.TopRatedMovies.collectAsStateWithLifecycle()
     val upcomingMoviesState by viewModel.UpComingMovies.collectAsStateWithLifecycle()
 
+    val scope = rememberCoroutineScope()
+
+
+
     // then i call the get popular movies function to fetch data from api which will make the data
     // ready for the user before entering the main screen
     // those popular movies will be stored in the database
@@ -226,7 +232,7 @@ fun SplashingScreen(
                 (combinedUiState is UiState.Loading && !showButton) || (combinedUiState is UiState.Success && !showButton) -> {
                     CircularProgressIndicator(
                         color = Color.White,
-                    modifier = Modifier.padding(8.dp)
+                        modifier = Modifier.padding(8.dp)
                     )
                     Text(
                         text = "Loading...",
@@ -259,8 +265,24 @@ fun SplashingScreen(
                         Text(text = "Continue")
                     }
                 }
-                combinedUiState is UiState.Error  -> {
-                    Text(text = "Error: ${combinedUiState.message}")
+                combinedUiState is UiState.Error -> {
+                    Text(
+                        text = "Error: ${combinedUiState.message}. Please try again",
+                        color = Color.White
+                    )
+
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                // Call the same API loading functions again
+                                viewModel.getPopularMovies(1)
+                                viewModel.getTopRatedMovies(1)
+                                viewModel.getUpComingMovies(1)
+                            }
+                        }
+                    ) {
+                        Text(text = "Try Again")
+                    }
                 }
             }
         }

@@ -11,7 +11,8 @@ interface MoviesRepository {
     suspend fun getTopRatedMovies(page: Int) : UiState<List<Movie>>
 
     suspend fun getMoviesByGenre(page : Int , genreId : Int) : UiState<List<Movie>>
-//access viewmodel for calling
+
+    //access viewmodel for calling
     suspend fun getMovieCredits(movieId: Int): UiState<CreditsResponse>
 
     suspend fun insert(movie: Movie)

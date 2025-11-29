@@ -1,5 +1,6 @@
 package com.example.MovieApp.ViewModels.Movies
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.MovieApp.Dto.Cast
@@ -24,9 +25,14 @@ open class  MoviesViewModel(
 
 
     fun getPopularMovies(page: Int) {
+        Log.d("MoviesViewModel", "getPopularMovies called with page: $page")
         viewModelScope.launch {
+            Log.d("MoviesViewModel", "getPopularMovies coroutine started")
             when (val response = repo.getPopularMovies(page)) {
-                is UiState.Success -> _popularMovies.value = UiState.Success(response.data)
+                is UiState.Success -> {
+                    _popularMovies.value = UiState.Success(response.data)
+                    Log.d("MoviesViewModel", "getPopularMovies success: ${response.data}")
+                }
                 is UiState.Error -> _popularMovies.value = UiState.Error(response.message)
                 else -> _popularMovies.value = UiState.Loading
             }
@@ -39,9 +45,14 @@ open class  MoviesViewModel(
     val UpComingMovies : StateFlow<UiState<List<Movie>>> = _UpComingMovies.asStateFlow()
 
     fun getUpComingMovies(page: Int) {
+        Log.d("MoviesViewModel", "getUpComingMovies called with page: $page")
         viewModelScope.launch {
+            Log.d("MoviesViewModel", "getUpComingMovies coroutine started")
             when (val response = repo.getUpComingMovies(page)) {
-                is UiState.Success -> _UpComingMovies.value = UiState.Success(response.data)
+                is UiState.Success ->{
+                    _UpComingMovies.value = UiState.Success(response.data)
+                    Log.d("MoviesViewModel", "getUpComingMovies success: ${response.data}")
+                }
                 is UiState.Error -> _UpComingMovies.value = UiState.Error(response.message)
                 else -> _UpComingMovies.value = UiState.Loading
             }
@@ -56,9 +67,14 @@ open class  MoviesViewModel(
     val TopRatedMovies : StateFlow<UiState<List<Movie>>> = _TopRatedMovies.asStateFlow()
 
     fun getTopRatedMovies(page: Int) {
+        Log.d("MoviesViewModel", "getTopRatedMovies called with page: $page")
         viewModelScope.launch {
+            Log.d("MoviesViewModel", "getTopRatedMovies coroutine started")
             when (val response = repo.getTopRatedMovies(page)) {
-                is UiState.Success -> _TopRatedMovies.value = UiState.Success(response.data)
+                is UiState.Success -> {
+                    _TopRatedMovies.value = UiState.Success(response.data)
+                    Log.d("MoviesViewModel", "getTopRatedMovies success: ${response.data}")
+                }
                 is UiState.Error -> _TopRatedMovies.value = UiState.Error(response.message)
                 else -> _TopRatedMovies.value = UiState.Loading
             }
