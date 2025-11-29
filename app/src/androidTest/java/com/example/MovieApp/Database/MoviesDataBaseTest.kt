@@ -1,5 +1,7 @@
 package com.example.MovieApp.Database
 
+import androidx.room.Room
+import androidx.test.core.app.ApplicationProvider
 import org.junit.After
 import org.junit.Before
 
@@ -9,12 +11,12 @@ class MoviesDataBaseTest {
 
     @Before
     fun setUp() {
-        TODO("Not yet implemented")
+
     }
 
     @After
     fun tearDown() {
-        TODO("Not yet implemented")
+
     }
 
 }
