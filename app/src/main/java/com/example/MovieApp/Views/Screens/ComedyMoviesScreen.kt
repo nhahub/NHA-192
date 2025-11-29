@@ -48,11 +48,11 @@ import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
-import com.example.MovieApp.Views.DrawerContent
+import com.example.MovieApp.Views.Components.DrawerContent
 import kotlinx.coroutines.launch
 
 @Composable
-fun ComedyMovies(viewModel: MoviesViewModel, navController: NavController){
+fun ComedyMovies(viewModel: MoviesViewModel, navController: NavController) {
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -129,7 +129,8 @@ fun ComedyMovies(viewModel: MoviesViewModel, navController: NavController){
                                 color = Color(0xFFBDBDBD)
                             )
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
                         shape = RoundedCornerShape(16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -168,7 +169,11 @@ fun ComedyMovies(viewModel: MoviesViewModel, navController: NavController){
 
                     is UiState.Success -> {
                         items(ComedyMoviesState.data) { movie ->
-                            MovieCard(movie = movie , navController = navController , viewModel = viewModel)
+                            MovieCard(
+                                movie = movie,
+                                navController = navController,
+                                viewModel = viewModel
+                            )
                         }
                     }
 

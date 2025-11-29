@@ -6,8 +6,7 @@ import com.example.MovieApp.Repo.Movies.MoviesRepository
 
 class MoviesViewModelFactory(
     private val repo: MoviesRepository
-)
-: ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(MoviesViewModel::class.java)) {
             MoviesViewModel(repo) as T

@@ -6,8 +6,7 @@ import com.example.MovieApp.Auth.EmailPasswordAuthManagerRepository
 
 class AuthViewModelFactory(
     private val repo: EmailPasswordAuthManagerRepository
-)
-    : ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return if (modelClass.isAssignableFrom(AuthViewModel::class.java)) {
             AuthViewModel(repo) as T

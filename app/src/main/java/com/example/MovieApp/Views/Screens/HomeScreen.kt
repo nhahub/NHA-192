@@ -2,11 +2,6 @@ package com.example.MovieApp.Views.Screens
 
 
 import MovieCard
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -16,52 +11,64 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
-import com.example.MovieApp.R
-import com.example.MovieApp.Utils.UiState
-import com.example.MovieApp.ui.theme.Almond
-import com.example.MovieApp.ui.theme.OldBrick
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.DrawerValue
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.ModalDrawerSheet
-import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.Text
-import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.MovieApp.Dto.Movie
+import com.example.MovieApp.R
+import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
-import com.example.MovieApp.Views.DrawerContent
+import com.example.MovieApp.Views.Components.DrawerContent
+import com.example.MovieApp.ui.themes.Almond
+import com.example.MovieApp.ui.themes.OldBrick
 import kotlinx.coroutines.launch
 
-@Composable
-fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navController: NavController) {
+val customFont = FontFamily(Font(R.font.spellofasia))
 
+@Composable
+fun HomeScreen(
+    viewModel: MoviesViewModel,
+    modifier: Modifier = Modifier,
+    navController: NavController
+) {
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     // Search state
@@ -71,6 +78,7 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
     val popularMoviesState = viewModel.popularMovies.collectAsState().value
     val topRatedMoviesState = viewModel.TopRatedMovies.collectAsState().value
     val upComingMoviesState = viewModel.UpComingMovies.collectAsState().value
+
 
     // Load data when screen opens
     LaunchedEffect(Unit) {
@@ -142,11 +150,12 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
                                 contentAlignment = Alignment.CenterStart// centers content inside the Box
                             ) {
                                 Text(
-                                    text = "春影 ChunCine",
+                                    text = "德拉戈·布雷兹 DragoBlaze",
                                     color = Color.Yellow,
                                     style = MaterialTheme.typography.titleLarge,
                                     fontWeight = FontWeight.W400,
-                                    fontSize = 35.sp
+                                    fontSize = 35.sp,
+                                    fontFamily = customFont
                                 )
                             }
                         }
@@ -174,7 +183,8 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
                                 placeholder = {
                                     Text(
                                         "搜索电影... Search movies...",
-                                        color = Color(0xFFBDBDBD)
+                                        color = Color(0xFFBDBDBD),
+                                        fontFamily = customFont
                                     )
                                 },
                                 modifier = Modifier
@@ -244,7 +254,12 @@ fun HomeScreen(viewModel: MoviesViewModel, modifier: Modifier = Modifier , navCo
 }
 
 @Composable
-fun SectionMovies(title: String, state: UiState<List<Movie>>, navController: NavController, viewModel: MoviesViewModel) {
+fun SectionMovies(
+    title: String,
+    state: UiState<List<Movie>>,
+    navController: NavController,
+    viewModel: MoviesViewModel
+) {
 
     Column(modifier = Modifier.fillMaxWidth()) {
 
@@ -253,13 +268,14 @@ fun SectionMovies(title: String, state: UiState<List<Movie>>, navController: Nav
             fontWeight = FontWeight.W400,
             fontSize = 20.sp,
             color = Color.Yellow,
-            modifier = Modifier.padding(start = 10.dp, top = 10.dp)
+            modifier = Modifier.padding(start = 10.dp, top = 10.dp),
+            fontFamily = customFont
         )
 
         LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 20.dp , start= 10.dp ),
+                .padding(top = 20.dp, start = 10.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             when (state) {
@@ -271,7 +287,11 @@ fun SectionMovies(title: String, state: UiState<List<Movie>>, navController: Nav
 
                 is UiState.Success -> {
                     items(state.data) { movie ->
-                        MovieCard(movie = movie, navController = navController , viewModel = viewModel)
+                        MovieCard(
+                            movie = movie,
+                            navController = navController,
+                            viewModel = viewModel
+                        )
                     }
                 }
 

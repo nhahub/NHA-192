@@ -31,8 +31,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import com.example.MovieApp.R
 import com.example.MovieApp.Auth.AuthResult
+import com.example.MovieApp.R
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import kotlinx.coroutines.delay
 
@@ -52,7 +52,7 @@ fun SignUpScreen(
 
     // Navigating on Success
     LaunchedEffect(signUpstate) {
-        if(signUpstate is AuthResult.Success<String>){
+        if (signUpstate is AuthResult.Success<String>) {
             delay(1000)
             navController.popBackStack()
             navController.navigate("main_screen") {
@@ -168,7 +168,9 @@ fun SignUpScreen(
                     ),
                     border = BorderStroke(1.dp, Color(0x66FFFFFF)),
                     elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
-                    modifier = Modifier.weight(1f).padding(end = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
                 ) {
                     Text("Back")
                 }
@@ -188,7 +190,9 @@ fun SignUpScreen(
                         defaultElevation = 6.dp,
                         pressedElevation = 2.dp
                     ),
-                    modifier = Modifier.weight(1f).padding(start = 8.dp)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(start = 8.dp)
                 ) {
                     Text("Sign up")
                 }

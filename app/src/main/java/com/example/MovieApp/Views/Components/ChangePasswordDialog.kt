@@ -1,5 +1,6 @@
-package com.example.MovieApp.Views
+package com.example.MovieApp.Views.Components
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -9,10 +10,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
@@ -28,20 +29,20 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.DialogProperties
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.MovieApp.Auth.AuthResult
-import com.example.MovieApp.ui.theme.Saffron
-import com.example.MovieApp.ui.theme.Typography
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
+import com.example.MovieApp.ui.themes.Saffron
+import com.example.MovieApp.ui.themes.Typography
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChangePasswordDialog (
-        onDismissRequest: () -> Unit,
-        authViewModel: AuthViewModel
-    ) {
+fun ChangePasswordDialog(
+    onDismissRequest: () -> Unit,
+    authViewModel: AuthViewModel
+) {
     val oldPassword = remember { mutableStateOf("") }
     val newPassword = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
@@ -50,7 +51,7 @@ fun ChangePasswordDialog (
     var pressed by remember { mutableStateOf(false) }
     var passwordMismatchError by remember { mutableStateOf(false) }
 
-    Dialog (
+    Dialog(
         onDismissRequest = { onDismissRequest() },
         properties = DialogProperties(
             usePlatformDefaultWidth = false
@@ -60,7 +61,7 @@ fun ChangePasswordDialog (
             modifier = Modifier
                 .fillMaxWidth(),
             shape = RoundedCornerShape(16.dp),
-            border = androidx.compose.foundation.BorderStroke(2.dp, Saffron),
+            border = BorderStroke(2.dp, Saffron),
             colors = CardDefaults.cardColors(
                 containerColor = Color.Black.copy(alpha = 0.7f)
             )
@@ -160,16 +161,18 @@ fun ChangePasswordDialog (
                     ),
                     contentPadding = PaddingValues(all = 0.dp)
                 ) {
-                    if(pressed) {
+                    if (pressed) {
                         when (signInstate) {
                             is AuthResult.Success<String> -> {
                                 ButtonText("Password changed successfully")
                                 onDismissRequest()
                             }
-                            is AuthResult.Error ->{
+
+                            is AuthResult.Error -> {
                                 ButtonText((signInstate as AuthResult.Error).message + " Try again")
                             }
-                            is AuthResult.Loading ->{
+
+                            is AuthResult.Loading -> {
                                 ButtonText("Loading...")
                             }
                         }

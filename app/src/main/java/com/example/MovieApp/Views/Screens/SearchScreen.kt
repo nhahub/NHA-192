@@ -3,17 +3,30 @@ package com.example.MovieApp.Views.Screens
 import MovieCard
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBackIosNew
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.*
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -51,7 +64,7 @@ fun SearchScreen(
     // Collect merged and filtered movies from the view model
     val searchResultsState by searchViewModel.searchedMovie.collectAsState()
 
-        val pop = movieViewModel.popularMovies
+    movieViewModel.popularMovies
 
     Box(modifier = Modifier.fillMaxSize()) {
 
@@ -70,7 +83,9 @@ fun SearchScreen(
                 .background(Color(0x80000000))
         )
 
-        Column(modifier = Modifier.fillMaxSize().padding(16.dp)) {
+        Column(modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp)) {
 
             // Back button and Search bar row
             Row(
@@ -92,7 +107,11 @@ fun SearchScreen(
                     value = searchText,
                     onValueChange = { searchViewModel.onSearchTextChange(it) },
                     leadingIcon = {
-                        Icon(imageVector = Icons.Default.Search, contentDescription = null, tint = Color.Yellow)
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = Color.Yellow
+                        )
                     },
                     placeholder = { Text("Search movies...", color = Color.LightGray) },
                     singleLine = true,
@@ -135,22 +154,40 @@ fun SearchScreen(
             ) {
                 when (val state = searchResultsState) {
                     is UiState.Loading -> item {
-                        Text(text = "No searched movies yet.", color = Color.White, modifier = Modifier.padding(16.dp))
+                        Text(
+                            text = "No searched movies yet.",
+                            color = Color.White,
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
+
                     is UiState.Success -> {
                         val movies = state.data
                         if (movies.isEmpty()) {
                             item {
-                                Text("No movies found", color = Color.White, modifier = Modifier.padding(16.dp))
+                                Text(
+                                    "No movies found",
+                                    color = Color.White,
+                                    modifier = Modifier.padding(16.dp)
+                                )
                             }
                         } else {
                             items(movies) { movie ->
-                                    MovieCard(movie = movie, navController = navController , viewModel = movieViewModel)
+                                MovieCard(
+                                    movie = movie,
+                                    navController = navController,
+                                    viewModel = movieViewModel
+                                )
                             }
                         }
                     }
+
                     is UiState.Error -> item {
-                        Text("Error: ${state.message}", color = Color.Red, modifier = Modifier.padding(16.dp))
+                        Text(
+                            "Error: ${state.message}",
+                            color = Color.Red,
+                            modifier = Modifier.padding(16.dp)
+                        )
                     }
                 }
             }

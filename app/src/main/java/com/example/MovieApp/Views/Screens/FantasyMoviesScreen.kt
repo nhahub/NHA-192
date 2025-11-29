@@ -48,11 +48,11 @@ import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
-import com.example.MovieApp.Views.DrawerContent
+import com.example.MovieApp.Views.Components.DrawerContent
 import kotlinx.coroutines.launch
 
 @Composable
-fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
+fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController) {
 
     val scope = rememberCoroutineScope()
     val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
@@ -72,7 +72,7 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                 DrawerContent(navController = navController)
             }
         }
-    ){
+    ) {
         val FantasyMoviesState = viewModel.FantasyMovies.collectAsState().value
 
         Image(
@@ -93,7 +93,7 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                 .fillMaxSize()
                 .padding(start = 10.dp)
         ) {
-            Column{
+            Column {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -130,7 +130,8 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                                 color = Color(0xFFBDBDBD)
                             )
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
                             .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
                         shape = RoundedCornerShape(16.dp),
                         colors = OutlinedTextFieldDefaults.colors(
@@ -159,13 +160,21 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController){
                 when (FantasyMoviesState) {
                     is UiState.Loading -> {
                         item {
-                            Text("Loading...", color = Color.White, modifier = Modifier.padding(16.dp))
+                            Text(
+                                "Loading...",
+                                color = Color.White,
+                                modifier = Modifier.padding(16.dp)
+                            )
                         }
                     }
 
                     is UiState.Success -> {
                         items(FantasyMoviesState.data) { movie ->
-                            MovieCard(movie = movie , navController = navController , viewModel = viewModel)
+                            MovieCard(
+                                movie = movie,
+                                navController = navController,
+                                viewModel = viewModel
+                            )
                         }
                     }
 

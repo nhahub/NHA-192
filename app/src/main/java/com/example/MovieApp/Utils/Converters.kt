@@ -1,4 +1,5 @@
 package com.example.MovieApp.Utils
+
 import androidx.room.TypeConverter
 
 class Converters {
