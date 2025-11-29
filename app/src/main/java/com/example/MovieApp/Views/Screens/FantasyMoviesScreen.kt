@@ -39,11 +39,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
@@ -93,55 +96,66 @@ fun FantasyMovies(viewModel: MoviesViewModel, navController: NavController) {
                 .fillMaxSize()
                 .padding(start = 10.dp)
         ) {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .clickable { navController.navigate("search") }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp)
+            ) {
+                IconButton(
+                    onClick = { scope.launch { drawerState.open() } },
+                    modifier = Modifier.align(Alignment.CenterVertically)
                 ) {
-                    IconButton(onClick = {
-                        scope.launch { drawerState.open() }
-                    }) {
-                        Icon(
-                            Icons.Default.Menu,
-                            contentDescription = "Menu",
-                            tint = Color.White
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.width(8.dp))
-
-                    OutlinedTextField(
-                        value = searchText,
-                        onValueChange = {},
-                        enabled = false,
-                        readOnly = true,
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Search,
-                                contentDescription = null,
-                                tint = Color(0xFFFFD54F)
-                            )
-                        },
-                        placeholder = {
-                            Text(
-                                "Search..",
-                                color = Color(0xFFBDBDBD)
-                            )
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
-                        shape = RoundedCornerShape(16.dp),
-                        colors = OutlinedTextFieldDefaults.colors(
-                            disabledBorderColor = Color(0xFFFFD54F),
-                            disabledTextColor = Color(0xFFE0E0E0),
-                            cursorColor = Color(0xFFFFEB3B)
-
-                        )
+                    Icon(
+                        Icons.Default.Menu,
+                        contentDescription = "Menu",
+                        tint = Color.White
                     )
                 }
+                Spacer(modifier = Modifier.width(16.dp))
+                Text(
+                    text = "Fantasy Movies",
+                    color = Color(0xFFFFD54F),
+                    fontSize = 28.sp,
+                    fontWeight = FontWeight.Bold,
+                    fontFamily = customFont,
+                    modifier = Modifier.align(Alignment.CenterVertically)
+                )
+            }
+
+            Box(
+                modifier = Modifier
+                    .padding(all = 8.dp)
+                    .clickable { navController.navigate("search") }
+            ) {
+                OutlinedTextField(
+                    value = searchText,
+                    onValueChange = {},
+                    enabled = false,
+                    readOnly = true,
+                    leadingIcon = {
+                        Icon(
+                            imageVector = Icons.Default.Search,
+                            contentDescription = null,
+                            tint = Color(0xFFFFD54F)
+                        )
+                    },
+                    placeholder = {
+                        Text(
+                            "Search..",
+                            color = Color(0xFFBDBDBD)
+                        )
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(Color(0xFF3A0000), RoundedCornerShape(16.dp)),
+                    shape = RoundedCornerShape(16.dp),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        disabledBorderColor = Color(0xFFFFD54F),
+                        disabledTextColor = Color(0xFFE0E0E0),
+                        cursorColor = Color(0xFFFFEB3B)
+
+                    )
+                )
             }
 
             LazyVerticalGrid(

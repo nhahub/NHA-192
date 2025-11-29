@@ -39,11 +39,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.MovieApp.R
 import com.example.MovieApp.Utils.UiState
@@ -96,16 +99,14 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController) {
                     .padding(start = 10.dp)
             ) {
 
-                // Search Bar
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(10.dp)
-                        .clickable { navController.navigate("search") }
                 ) {
-
                     IconButton(
-                        onClick = { scope.launch { drawerState.open() } }
+                        onClick = { scope.launch { drawerState.open() } },
+                        modifier = Modifier.align(Alignment.CenterVertically)
                     ) {
                         Icon(
                             Icons.Default.Menu,
@@ -113,9 +114,22 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController) {
                             tint = Color.White
                         )
                     }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    Text(
+                        text = "Adventure Movies",
+                        color = Color(0xFFFFD54F),
+                        fontSize = 28.sp,
+                        fontWeight = FontWeight.Bold,
+                        fontFamily = customFont,
+                        modifier = Modifier.align(Alignment.CenterVertically)
+                    )
+                }
 
-                    Spacer(modifier = Modifier.width(8.dp))
-
+                Box(
+                    modifier = Modifier
+                        .padding(all = 8.dp)
+                        .clickable { navController.navigate("search") }
+                ) {
                     OutlinedTextField(
                         value = searchText,
                         onValueChange = {},
@@ -129,7 +143,10 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController) {
                             )
                         },
                         placeholder = {
-                            Text("Search..", color = Color(0xFFBDBDBD))
+                            Text(
+                                "Search..",
+                                color = Color(0xFFBDBDBD)
+                            )
                         },
                         modifier = Modifier
                             .fillMaxWidth()
@@ -139,6 +156,7 @@ fun AdventureMovies(viewModel: MoviesViewModel, navController: NavController) {
                             disabledBorderColor = Color(0xFFFFD54F),
                             disabledTextColor = Color(0xFFE0E0E0),
                             cursorColor = Color(0xFFFFEB3B)
+
                         )
                     )
                 }
