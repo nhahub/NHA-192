@@ -73,8 +73,8 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel
 ) {
-    val darkMode by settingsViewModel.darkMode.collectAsState()
-    val coroutineScope = rememberCoroutineScope()
+//    val darkMode by settingsViewModel.darkMode.collectAsState()
+//    val coroutineScope = rememberCoroutineScope()
     val openAlertDialog = remember { mutableStateOf(false) }
     val openSignOutDialog = remember { mutableStateOf(false) }
 
@@ -115,42 +115,40 @@ fun SettingsScreen(
         )
         Scaffold(
             containerColor = Color.Transparent,
-            topBar = {
-                TopAppBar(
-                    modifier = Modifier.height(100.dp),
-                    colors = TopAppBarDefaults.topAppBarColors(
-                        containerColor = Grapefruit,
-                        scrolledContainerColor = Grapefruit,
-                        navigationIconContentColor = Color.White,
-                        actionIconContentColor = Color.White,
-                        titleContentColor = Color.White,
-                    ),
-                    title = {
-                        Text(
-                            "设置 Settings",
-                            modifier = Modifier.padding(vertical = 12.dp),
-                            style = Typography.headlineMedium
-                        )
-                    },
-                    navigationIcon = {
-                        IconButton(
-                            onClick = { navController.popBackStack() },
-                            modifier = Modifier
-                                .padding(horizontal = 16.dp, vertical = 24.dp)
-                                .size(20.dp)
-                        ) {
-                            Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
-                        }
-                    }
-                )
-            }
         ) { innerPadding ->
             Column(
                 modifier = Modifier
-                    .padding(innerPadding)
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp)
+                        .background(Grapefruit)
+                ) {
+                    IconButton(
+                        onClick = { navController.popBackStack() },
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                            .align(Alignment.CenterVertically)
+                            .size(24.dp)
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                            contentDescription = "Back",
+                            tint = Color.White
+                        )
+                    }
+
+                    Text(
+                        text = "设置 Settings",
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically),
+                        style = Typography.headlineMedium,
+                        color = Color.White
+                    )
+                }
                 HorizontalDivider(
                     modifier = Modifier.fillMaxWidth(),
                     color = Saffron
