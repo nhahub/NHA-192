@@ -1,20 +1,65 @@
 # DragoBlaze - Android Movie Streaming Application 
 
 # Overview
-DragoBlaze is an Android application that enables users to discover and explore movies with a seamless browsing and search experience.
-It leverages modern Android development tools, a modular codebase, and reactive UI patterns to deliver fast performance, clean architecture, and maintainability.
+DragoBlazo is a feature-rich Android application that allows users to browse, search, and explore movies across multiple genres.
+The application is designed in a Chinese-style visual theme, incorporating clean typography, rounded card patterns, bold visuals, and elegant animations influenced by modern Chinese mobile UI trends.
 
-The application integrates with a third-party movie API to fetch real-time data including titles, posters, cast, and more.
+DragoBlazo integrates:
+
+  - Real-time API calls
+
+  - Firebase authentication
+
+  - Room database for offline favorites & watch-later
+
+  - Modern Jetpack Compose UI
+
+  - MVVM architecture for scalability
+
+  - Unit tests for core components
+
+This project demonstrates a professional, production-level Android app architecture suitable for large-scale applications.
 
 # Features
-- Search for movies across all genres().
-- View movie details (title, description, rating, poster).
-- Jetpack Compose UI with dynamic state handling.
-- Fetch data from API using Retrofit.
-- MVVM architecture with Repository pattern.
-- Clean and reactive UI using StateFlow.
-- Error & loading states.
-- Responsive layout for all screen sizes.
+- Screens
+
+- Home Screen (displays trending & featured movies)
+
+  - Search Screen (search movies across all genres)
+
+  - Movie Details Screen (Title, Poster, Cast, Director, Overview)
+
+  - Popular Genres Screens (Action, Comedy, Fantasy, Science Fiction)
+
+  - Settings Screen (theme, profile, preferences)
+
+- Authentication
+
+  - Firebase Authentication (Email/Password login & registration)
+
+- User Collections
+
+  - Favorites Screen —> saved using Room Database
+
+  - Watch Later Screen —> persistent local storage via Room
+
+- Network
+
+  - Real-time API fetching using Retrofit + Coroutines
+
+  - Loading and error handling UI
+
+- Testing
+
+  - Unit tests for ViewModels and repositories
+
+  - Testable architecture using dependency injection principles
+
+- Architecture
+
+  - Fully structured in MVVM with Repository pattern
+
+  - Reactive state handling using StateFlow
 
 # Tech Stack
 - Programming Language: Kotlin.
