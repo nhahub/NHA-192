@@ -10,6 +10,8 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.google.gms.google.services)
     alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 
@@ -28,6 +30,7 @@ android {
 
         // Expose MOVIE _API_KEY to BuildConfig
         buildConfigField("String", "MOVIE_API_KEY", "\"$MOVIE_API_KEY\"")
+    }
 
         buildTypes {
             release {
@@ -50,7 +53,6 @@ android {
             buildConfig = true
         }
     }
-}
 
 dependencies {
 
