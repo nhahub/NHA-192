@@ -33,16 +33,17 @@ import com.example.MovieApp.Dto.CreditsResponse
 import com.example.MovieApp.Dto.Movie
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
+import com.example.MovieApp.ui.themes.DarkBackground
+import com.example.MovieApp.ui.themes.DarkCardBackground
+import com.example.MovieApp.ui.themes.GoldAccent
+import com.example.MovieApp.ui.themes.LightGrayText
+import com.example.MovieApp.ui.themes.MaroonChip
+import com.example.MovieApp.ui.themes.RedPlay
+import com.example.MovieApp.ui.themes.WightGrayText
 
 //  **1. define colors & theme **
 
-val DarkBackground = Color(0xFF101010)
-val DarkCardBackground = Color(0xFF1E1E1E)
-val GoldAccent = Color(0xFFF0C14B)
-val RedPlay = Color(0xFFD50000)
-val MaroonChip = Color(0xFF4A141C)
-val LightGrayText = Color(0xFFB0B0B0)
-val WightGrayText = Color(0xFFE7DADA)
+
 
 
 // ** 3. main screen composable functions **
@@ -240,21 +241,6 @@ fun ActionButtons(viewModel: MoviesViewModel , movie: Movie ) {
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Play Button
-        Button(
-            onClick = { /* Handle Play */ },
-            colors = ButtonDefaults.buttonColors(containerColor = RedPlay),
-            shape = RoundedCornerShape(24.dp),
-            modifier = Modifier
-                .weight(1f)
-                .height(48.dp)
-        ) {
-            Icon(Icons.Default.PlayArrow, contentDescription = "Play", tint = Color.White)
-            Spacer(modifier = Modifier.width(8.dp))
-            Text("Play", color = Color.White, fontWeight = FontWeight.Bold)
-        }
-
-        Spacer(modifier = Modifier.width(16.dp))
 
         // Favorite Button
         ActionButton(
@@ -272,13 +258,6 @@ fun ActionButtons(viewModel: MoviesViewModel , movie: Movie ) {
             viewModel.toggleWatchLater(movie = movie)
         }
 
-        // Share Button
-        ActionButton(
-            icon = Icons.Default.Share,
-            description = "Share"
-        ) {
-            // Function for share
-        }
     }
 }
 
