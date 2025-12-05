@@ -31,8 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.Font
-import androidx.compose.ui.text.font.FontFamily
+import com.example.MovieApp.ui.themes.customFont
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -48,15 +47,12 @@ import com.example.MovieApp.Datastore.DataStoreManager
 import com.example.MovieApp.Network.RemoteDataSourceImpl
 import com.example.MovieApp.R
 import com.example.MovieApp.Repo.Movies.MoviesRepositoryImpl
-import com.example.MovieApp.Repo.Search.SearchRepositoryImpl
 import com.example.MovieApp.Repo.Settings.SettingsRepositoryImpl
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import com.example.MovieApp.ViewModels.Auth.AuthViewModelFactory
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModelFactory
-import com.example.MovieApp.ViewModels.Search.SearchViewModel
-import com.example.MovieApp.ViewModels.Search.SearchViewModelFactory
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModelFactory
 import com.example.MovieApp.ui.themes.SplashScreenTheme
@@ -66,7 +62,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.text.style.TextAlign
 
 class SplashingScreen : ComponentActivity() {
-    val customFont = FontFamily(Font(R.font.spellofasia))
 
     // creating view model instance by factory design pattern
     val viewModel: MoviesViewModel by viewModels {
@@ -74,14 +69,6 @@ class SplashingScreen : ComponentActivity() {
             repo = MoviesRepositoryImpl(
                 remoteDataSource = RemoteDataSourceImpl(),
                 localDataSource = LocalDataSourceImpl(this)
-            )
-        )
-    }
-
-    val searchViewModel: SearchViewModel by viewModels {
-        SearchViewModelFactory(
-            repo = SearchRepositoryImpl(
-                remoteDataSource = RemoteDataSourceImpl(),
             )
         )
     }

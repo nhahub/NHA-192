@@ -18,10 +18,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
-import androidx.compose.material.icons.filled.ExitToApp
-import androidx.compose.material.icons.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.Info
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.Button
@@ -34,14 +31,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -53,7 +45,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import com.example.MovieApp.R
 import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import com.example.MovieApp.ViewModels.Settings.SettingsViewModel
 import com.example.MovieApp.Views.Components.ChangePasswordDialog
@@ -63,7 +54,6 @@ import com.example.MovieApp.ui.themes.Grapefruit
 import com.example.MovieApp.ui.themes.OldBrick
 import com.example.MovieApp.ui.themes.Saffron
 import com.example.MovieApp.ui.themes.Typography
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -73,8 +63,6 @@ fun SettingsScreen(
     settingsViewModel: SettingsViewModel,
     authViewModel: AuthViewModel
 ) {
-//    val darkMode by settingsViewModel.darkMode.collectAsState()
-//    val coroutineScope = rememberCoroutineScope()
     val openAlertDialog = remember { mutableStateOf(false) }
     val openSignOutDialog = remember { mutableStateOf(false) }
 

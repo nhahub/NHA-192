@@ -60,8 +60,7 @@ import com.example.MovieApp.Views.Components.DrawerContent
 import com.example.MovieApp.ui.themes.Almond
 import com.example.MovieApp.ui.themes.OldBrick
 import kotlinx.coroutines.launch
-
-val customFont = FontFamily(Font(R.font.spellofasia))
+import com.example.MovieApp.ui.themes.customFont
 
 @Composable
 fun HomeScreen(

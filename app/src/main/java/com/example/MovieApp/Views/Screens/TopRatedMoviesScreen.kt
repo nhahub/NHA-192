@@ -53,7 +53,7 @@ import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
 import com.example.MovieApp.Views.Components.DrawerContent
 import kotlinx.coroutines.launch
-
+import com.example.MovieApp.ui.themes.customFont
 @Composable
 fun TopRatedMoviesScreen(viewModel: MoviesViewModel, navController: NavController) {
 
