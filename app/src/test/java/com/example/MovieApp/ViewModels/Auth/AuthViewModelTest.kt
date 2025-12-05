@@ -1,8 +1,8 @@
 package com.example.MovieApp.ViewModels.Auth
 
-import com.example.MovieApp.auth.AuthResult
-import com.example.MovieApp.auth.EmailPasswordAuthManagerRepository
-import com.example.MovieApp.viewModels.AuthViewModel
+import com.example.MovieApp.Auth.EmailPasswordAuthManagerRepository
+import com.example.MovieApp.Auth.AuthResult
+import com.example.MovieApp.ViewModels.Auth.AuthViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import org.junit.Assert.*

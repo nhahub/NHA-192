@@ -1,9 +1,9 @@
 package com.example.MovieApp.ViewModels.Movies
 
+import com.example.MovieApp.Repo.Movies.MoviesRepository
 import com.example.MovieApp.Utils.UiState
-import com.example.MovieApp.dto.Movie
-import com.example.MovieApp.repo.MoviesRepository
-import com.example.MovieApp.viewModels.MoviesViewModel.MoviesViewModel
+import com.example.MovieApp.Dto.Movie
+import com.example.MovieApp.ViewModels.Movies.MoviesViewModel
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
