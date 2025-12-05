@@ -3,17 +3,13 @@ package com.example.MovieApp.ViewModels.Movies
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.MovieApp.Dto.Cast
 import com.example.MovieApp.Dto.CreditsResponse
 import com.example.MovieApp.Utils.UiState
 import com.example.MovieApp.Dto.Movie
 import com.example.MovieApp.Repo.Movies.MoviesRepository
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 open class  MoviesViewModel(
@@ -169,7 +165,7 @@ open class  MoviesViewModel(
             } else {
                 repo.delete(movie)
             }
-            // تحديث الـ list في ViewModel فورًا
+
             _FavoriteMovies.value = repo.getFavoriteMovies()
         }
     }
@@ -200,19 +196,7 @@ open class  MoviesViewModel(
         }
     }
 
-    // for inserting the movie in the database
-    fun insertInDataBase(movie: Movie) {
-        viewModelScope.launch {
-            repo.insert(movie)
-        }
-    }
 
-    // for deleting the movie from the database
-    fun deleteMovie(movie: Movie) {
-        viewModelScope.launch {
-            repo.delete(movie)
-        }
-    }
 
     // Director and Cast (movie credits)
     private val _creditsResponse = MutableStateFlow<UiState<CreditsResponse>>(UiState.Loading)
@@ -236,56 +220,6 @@ open class  MoviesViewModel(
                 }
             }
         }
-    }
-
-
-    // Search Logic: Merges Action, Adventure, Comedy, and Fantasy movies
-    private val _searchText = MutableStateFlow("")
-    val searchText = _searchText.asStateFlow()
-
-    // Combine all genres first (helper flow) to avoid combine 5+ args issue
-    private val _mergedGenreMovies = combine(
-        _ActionMovies,
-        _AdventureMovies,
-        _ComedyMovies,
-        _FantasyMovies
-    ) { action, adventure, comedy, fantasy ->
-        val movies = mutableListOf<Movie>()
-        fun add(state: UiState<List<Movie>>) {
-            if (state is UiState.Success) movies.addAll(state.data)
-        }
-        add(action)
-        add(adventure)
-        add(comedy)
-        add(fantasy)
-        movies.distinctBy { it.id }
-    }
-
-    // Final search results combining search text, popular movies, and merged genres
-    val searchResults: StateFlow<UiState<List<Movie>>> = combine(
-        _searchText,
-        _popularMovies,
-        _mergedGenreMovies
-    ) { text, popularState, genreMovies ->
-
-        if (text.isBlank()) {
-            // Return popular movies if search text is empty
-            popularState
-        } else {
-            // Filter locally
-            val filtered = genreMovies.filter {
-                it.title.contains(text, ignoreCase = true)
-            }
-            UiState.Success(filtered)
-        }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
-        initialValue = UiState.Loading
-    )
-
-    fun onSearchTextChange(text: String) {
-        _searchText.value = text
     }
 
     // Helper to trigger loading of all sections needed for search

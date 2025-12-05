@@ -31,6 +31,7 @@ import com.example.MovieApp.Views.Screens.HomeScreen
 import com.example.MovieApp.Views.Screens.SearchScreen
 import com.example.MovieApp.Views.Screens.SettingsScreen
 import com.example.MovieApp.Views.Screens.TopRatedMoviesScreen
+import com.example.MovieApp.Views.Screens.UpcomingMovies
 import com.example.MovieApp.Views.Screens.WatchLaterScreen
 import com.example.movie_app.MovieDetailScreen
 
@@ -123,6 +124,9 @@ fun MainScreen(
                     settingsViewModel = settingsViewModel,
                     parentNavController = parentNavController
                 )
+            }
+            composable("UpComing") {
+                UpcomingMovies(viewModel = viewModel, navController = navController)
             }
         }
     }

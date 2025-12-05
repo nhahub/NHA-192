@@ -178,12 +178,12 @@ fun SignInScreen(
                         .background(
                             Color(0x33000000),
                             shape = RoundedCornerShape(8.dp)
-                        ) // خلفية خفيفة عشان الكلام يبان
+                        )
                         .padding(8.dp)
                 )
             }
 
-            // Success Message (Optional)
+            // Success Message Display (Below Buttons)
             if (signInstate is AuthResult.Success<String>) {
                 Spacer(modifier = Modifier.padding(top = 16.dp))
                 Text(

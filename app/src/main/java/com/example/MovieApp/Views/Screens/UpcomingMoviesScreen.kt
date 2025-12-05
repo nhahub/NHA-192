@@ -59,7 +59,7 @@ fun UpcomingMovies(viewModel: MoviesViewModel, navController: NavController){
     var searchText by remember { mutableStateOf("") }
 
     LaunchedEffect(Unit) {
-        viewModel.getFantasyMovies(1)
+        viewModel.getUpComingMovies(1)
     }
 
 

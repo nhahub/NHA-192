@@ -35,15 +35,15 @@ import com.example.MovieApp.ui.themes.Saffron
 
 @Composable
 fun DrawerContent(navController: NavController) {
-    // (3) لازم تغلف كل حاجة بـ ModalDrawerSheet عشان ده الـ Container الرسمي للـ Drawer
+
     ModalDrawerSheet(
-        drawerContainerColor = Color.White, // لون خلفية الـ Drawer
+        drawerContainerColor = Color.White,
         windowInsets = WindowInsets(0.dp),
-        drawerShape = RoundedCornerShape(topEnd = 0.dp, bottomEnd = 0.dp) // لو عايز تلغي الكيرف
+        drawerShape = RoundedCornerShape(topEnd = 0.dp, bottomEnd = 0.dp)
     ) {
         Column(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween, // عشان يزق الزرار تحت خالص
+            verticalArrangement = Arrangement.SpaceBetween,
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             // ===  (Header + Items) ===
@@ -58,7 +58,7 @@ fun DrawerContent(navController: NavController) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Icon(
-                        imageVector = Icons.Filled.AccountCircle, // استخدم Filled بدل Default
+                        imageVector = Icons.Filled.AccountCircle,
                         contentDescription = "Account",
                         modifier = Modifier
                             .size(76.dp)
@@ -91,11 +91,11 @@ fun DrawerContent(navController: NavController) {
 
                 // Action with genre id 28
                 NavigationDrawerItem(
-                    modifier = Modifier.padding(horizontal = 12.dp), // تظبيط المسافات
+                    modifier = Modifier.padding(horizontal = 12.dp),
                     label = { Text("Action Movies") },
                     selected = false,
                     icon = {
-                        // (4) استخدمنا Filled.Call بعد ما عملنا Import
+
                         Icon(Icons.Filled.Movie, contentDescription = null)
                     },
                     onClick = { navController.navigate("Action") }
@@ -134,7 +134,6 @@ fun DrawerContent(navController: NavController) {
                     label = { Text("Fantasy Movies") },
                     selected = false,
                     icon = {
-                        // (4) استخدمنا Filled.Call بعد ما عملنا Import
                         Icon(Icons.Filled.Movie, contentDescription = null)
                     },
                     onClick = { navController.navigate("Fantasy") }
@@ -142,19 +141,33 @@ fun DrawerContent(navController: NavController) {
 
                 // TopRated Movies in drawer
                 NavigationDrawerItem(
-                    modifier = Modifier.padding(horizontal = 12.dp), // تظبيط المسافات
+                    modifier = Modifier.padding(horizontal = 12.dp),
                     label = { Text("TopRated Movies") },
                     selected = false,
                     icon = {
-                        // (4) استخدمنا Filled.Call بعد ما عملنا Import
+
                         Icon(Icons.Filled.Movie, contentDescription = null)
                     },
                     onClick = { navController.navigate("TopRated") }
                 )
+
+                // UpComing Movies in drawer
+                NavigationDrawerItem(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    label = { Text("UpComing Movies") },
+                    selected = false,
+                    icon = {
+
+                        Icon(Icons.Filled.Movie, contentDescription = null)
+                    },
+                    onClick = { navController.navigate("UpComing") }
+                )
+
+
             }
 
 
-            // === الجزء السفلي (Settings Button) ===
+            // === (Settings Button) ===
             Button(
                 modifier = Modifier
                     .padding(horizontal = 24.dp, vertical = 28.dp)
@@ -169,7 +182,7 @@ fun DrawerContent(navController: NavController) {
                     contentColor = Color.Black
                 )
             ) {
-                // (5) استخدمنا Outlined.Settings بعد الـ Import
+
                 Icon(
                     imageVector = Icons.Outlined.Settings,
                     contentDescription = "Settings",
